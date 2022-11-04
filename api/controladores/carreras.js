@@ -5,14 +5,16 @@ const models = require('../models');
 
 
 /* DECLARACION DE FUNCION DE BUSQUEDA POR cod_carrera*/
-const findCarreraCodigo = async(cod_carrera) => {
-    const carrera = await models.carrera
-        .findOne({
-            attributes: ["cod_carrera", "nombre", "id_instituto"],
-            where: { cod_carrera }
-        })
-    return carrera
-}
+//TRATAR DE IMPLEMENTAR EL ASYNC
+const findCarreraCodigo = (cod_carrera, { onSuccess, onNotFound, onError }) => {
+    models.carrera
+      .findOne({
+        attributes: ["cod_carrera", "nombre", "cod_departamento"],
+        where: { cod_carrera }
+      })
+      .then(carrera => (carrera ? onSuccess(carrera) : onNotFound()))
+      .catch(() => onError());
+  };
 
 
 
@@ -36,14 +38,14 @@ const get = async (req, res) => {
     
 }
 
-/* DECLARACION DE LA CONSULTA PARTICULAR POR cod_carrera */ 
-const getConCodigo = async (req, res) => {
-    try {
-        const carrera = await findCarreraCodigo(req.params.id)
-        carrera ? res.send(carrera) : res.sendStatus(404)
-    } catch {
-        res.sendStatus(500);
-    }
+/* DECLARACION DE LA CONSULTA PARTICULAR POR cod_carrera */
+//TRATAR DE IMPLEMENTAR EL ASYNC
+const getConCodigo = (req, res) => {
+    findCarreraCodigo(req.params.cod_carrera, {
+        onSuccess: carrera => res.send(carrera),
+        onNotFound: () => res.sendStatus(404),
+        onError: () => res.sendStatus(500)
+      });
 }
 
 
@@ -58,20 +60,20 @@ const post = async (req, res) => {
         const name = await models.carrera.findOne({
             attributes: ['cod_carrera', 'nombre', 'cod_departamento'],
             where: { nombre }
-        }) 
+        })
 
-        const cod = models.carrera.findOne({
+        const cod = await models.carrera.findOne({
             attributes: ['cod_carrera', 'nombre', 'cod_departamento'],
             where: { cod_carrera }
         })
 
-        if (name == nombre || cod == cod_carrera) {
+        if (name || cod ) {
             res.status(400).send({ message: 'Bad request: existe otra carrera con el mismo nombre o codigo de carrera' })
         } else {
             const nuevaCarrera = await models.carrera
                 .create({ cod_carrera, nombre, cod_departamento })
             res.status(201).send({ id: nuevaCarrera.id })
-        }
+        };
     } catch (error) {
         res.status(500).send(`Error al intentar insertar en la base de datos: ${error}`)
     }
@@ -82,15 +84,14 @@ const post = async (req, res) => {
 /* DECLARACION DE LA BAJA DE UN REGISTRO POR cod_carrera*/
 const deleteConCodigo = (req, res) => {
     const onSuccess = carrera =>
-        carrera
-            .destroy()
-            .then(() => res.status(200).send(`Se elimino permanentemente el registro de la carrera ${carrera.nombre}`))
-            .catch(() => res.sendStatus(500));
-            
-    findCarreraCodigo(req.params.cod_carrera, {
-        onSuccess,
-        onNotFound: () => res.sendStatus(404),
-        onError: () => res.sendStatus(500)
+    carrera
+      .destroy()
+      .then(() => res.sendStatus(200))
+      .catch(() => res.sendStatus(500));
+  findCarreraCodigo(req.params.cod_carrera, {
+    onSuccess,
+    onNotFound: () => res.sendStatus(404),
+    onError: () => res.sendStatus(500)
     })
 }
 

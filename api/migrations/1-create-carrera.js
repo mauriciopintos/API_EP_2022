@@ -11,10 +11,10 @@ module.exports = {
       nombre: {
         type: Sequelize.STRING
       },
-      cod_departamento: {
+      cod_carrera: {
         type: Sequelize.INTEGER
       },
-      cod_carrera: {
+      _departamento: {
         type: Sequelize.INTEGER
       },
       createdAt: {
