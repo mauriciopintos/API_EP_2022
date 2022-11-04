@@ -1,7 +1,19 @@
-/* CONTROLADORES PARA LA ENTIDAD CARERAS
+/* CONTROLADORES PARA LA ENTIDAD CARRERAS
 PARA ELLO SE UTILIZO EL CONCEPTO DE ABM (Alta/Baja/Modificacion) */
 
 const models = require('../models');
+
+
+/* DECLARACION DE FUNCION DE BUSQUEDA POR cod_carrera*/
+const findCarreraCodigo = async(cod_carrera) => {
+    const carrera = await models.carrera
+        .findOne({
+            attributes: ["cod_carrera", "nombre", "id_instituto"],
+            where: { cod_carrera }
+        })
+    return carrera
+}
+
 
 
 /* DECLARACION DE LA CONSULTA GENERAL */
@@ -11,203 +23,105 @@ const get = async (req, res) => {
     console.log(typeof tamanioPagina);
 
     try {
-        const alumnos = await models.alumno.findAll({
-            attributes: ["id", "nombre", "id_carrera"],
-            include: [{ as: 'Carrera-Relacionada', model: models.carrera, attributes: ["id", "nombre"] }],
+        const carreras = await models.carrera.findAll({
+            attributes: ["id", "nombre", "cod_carrera", "id_departamento"],
+            include:[{as: 'Departamento-Relacionado', model:models.departamento, attributes:["id_departamento", "nombre"]}],
             offset: (Number(numPagina)- 1) * Number(tamanioPagina),
             limit: Number(tamanioPagina)
         });
-        res.send(alumnos);
+        res.send(carreras);
     } catch{
         res.sendStatus(500);
     }
     
 }
 
-
-/* DECLARACION DE LA CONSULTA PARTICULAR POR CODIGO DE CARRERA */
-const getConCODIGO DE CARRERA = (req, res) => {
-    findAlumnoId(req.params.id, {
-        onSuccess: alumno => res.send(alumno),
-        onNotFound: () => res.sendStatus(404),
-        onError: () => res.sendStatus(500)
-    });
+/* DECLARACION DE LA CONSULTA PARTICULAR POR cod_carrera */ 
+const getConCodigo = async (req, res) => {
+    try {
+        const carrera = await findCarreraCodigo(req.params.id)
+        carrera ? res.send(carrera) : res.sendStatus(404)
+    } catch {
+        res.sendStatus(500);
+    }
 }
+
+
 
 
 /* DECLARACION DEL ALTA DE UN REGISTRO*/
-const post = (req, res) => {
-    const { nombre, id_carrera } = req.body;
-    models.alumno
-        .findOne({
-            attributes: ["id", "nombre"],
-            where: { nombre }
-        }).then(al => al ? res.status(400).send({ message: 'Bad request: existe otro alumno con el mismo nombre' }) :
-            models.alumno
-                .create({ nombre, id_carrera })
-                .then(alumno => res.status(200).send(alumno.nombre))
-        ).catch((error) => {
-            console.log(`Error al intentar insertar en la base de datos: ${error}`)
-            res.sendStatus(500)
-        })
-}
-
-const findAlumnoId = (id, { onSuccess, onNotFound, onError }) => {
-    models.alumno
-        .findOne({
-            attributes: ["id", "nombre"],
-            where: { id }
-        })
-        .then(alumno => (alumno ? onSuccess(alumno) : onNotFound()))
-        .catch(() => onError());
-};
-
-
-/* DECLARACION DE LA BAJA DE UN REGISTRO POR CODIGO DE CARRERA*/
-const deleteConCODIGO DE CARRERA = (req, res) => {
-    const onSuccess = alumno =>
-        alumno
-            .destroy()
-            .then(() => res.status(200).send(`Se elimino permanentemente el registro del ${alumno.nombre}`))
-            .catch(() => res.sendStatus(500));
-    findAlumnoId(req.params.id, {
-        onSuccess,
-        onNotFound: () => res.sendStatus(404),
-        onError: () => res.sendStatus(500)
-    })
-}
-
-/* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR CODIGO DE CARRERA*/
-const putConCODIGO DE CARRERA = (req, res) => {
-    const onSuccess = alumno => {
-        models.alumno.findOne({
-            where: { nombre: req.body.nombre }
-        })
-            .then(al => al ? res.status(400).send({ message: 'Bad request: existe otro alumno con el mismo nombre' }) :
-                alumno.update({ nombre: req.body.nombre }, { fields: ["nombre"] })
-                    .then(response => res.send(response))
-            )
-            .catch(error => console.log(error))
-    }
-
-    findAlumnoId(req.params.id, {
-        onSuccess,
-        onNotFound: () => res.sendStatus(404),
-        onError: (error) => {
-            console.log(`Error: ${error}`)
-            res.sendStatus(500)
-        }
-    })
-}
-
-module.exports = {
-/* CONTROLADORES PARA LA ENTIDAD ALUMNOS
-PARA ELLO SE UTILIZO EL CONCEPTO DE ABM (Alta/Baja/Modificacion) */
-
-const models = require('../models');
-
-
-/* DECLARACION DE LA CONSULTA GENERAL */
-const get = async (req, res) => {
-    const { numPagina, tamanioPagina } = req.query;
-    console.log(typeof numPagina);
-    console.log(typeof tamanioPagina);
+const post = async (req, res) => {
+    const { cod_carrera,nombre,cod_departamento } = req.body;
 
     try {
-        const alumnos = await models.alumno.findAll({
-            attributes: ["id", "nombre", "id_carrera"],
-            include: [{ as: 'Carrera-Relacionada', model: models.carrera, attributes: ["id", "nombre"] }],
-            offset: (Number(numPagina)- 1) * Number(tamanioPagina),
-            limit: Number(tamanioPagina)
-        });
-        res.send(alumnos);
-    } catch{
-        res.sendStatus(500);
-    }
-    
-}
-
-
-/* DECLARACION DE LA CONSULTA PARTICULAR POR DNI */
-const getConDNI = (req, res) => {
-    findAlumnoId(req.params.id, {
-        onSuccess: alumno => res.send(alumno),
-        onNotFound: () => res.sendStatus(404),
-        onError: () => res.sendStatus(500)
-    });
-}
-
-
-/* DECLARACION DEL ALTA DE UN REGISTRO*/
-const post = (req, res) => {
-    const { nombre, id_carrera } = req.body;
-    models.alumno
-        .findOne({
-            attributes: ["id", "nombre"],
+        const name = await models.carrera.findOne({
+            attributes: ['cod_carrera', 'nombre', 'cod_departamento'],
             where: { nombre }
-        }).then(al => al ? res.status(400).send({ message: 'Bad request: existe otro alumno con el mismo nombre' }) :
-            models.alumno
-                .create({ nombre, id_carrera })
-                .then(alumno => res.status(200).send(alumno.nombre))
-        ).catch((error) => {
-            console.log(`Error al intentar insertar en la base de datos: ${error}`)
-            res.sendStatus(500)
         })
+
+        const cod = models.carrera.findOne({
+            attributes: ['cod_carrera', 'nombre', 'cod_departamento'],
+            where: { cod_carrera }
+        })
+
+        if (name || cod) {
+            res.status(400).send({ message: 'Bad request: existe otra carrera con el mismo nombre o codigo de carrera' })
+        } else {
+            const nuevaCarrera = await models.carrera
+                .create({ cod_carrera, nombre, cod_departamento })
+            res.status(201).send({ id: nuevaCarrera.id })
+        }
+    } catch (error) {
+        res.status(500).send(`Error al intentar insertar en la base de datos: ${error}`)
+    }
 }
 
-const findAlumnoId = (id, { onSuccess, onNotFound, onError }) => {
-    models.alumno
-        .findOne({
-            attributes: ["id", "nombre"],
-            where: { id }
-        })
-        .then(alumno => (alumno ? onSuccess(alumno) : onNotFound()))
-        .catch(() => onError());
-};
 
 
-/* DECLARACION DE LA BAJA DE UN REGISTRO POR DNI*/
-const deleteConDNI = (req, res) => {
-    const onSuccess = alumno =>
-        alumno
+/* DECLARACION DE LA BAJA DE UN REGISTRO POR cod_carrera*/
+const deleteConCodigo = (req, res) => {
+    const onSuccess = carrera =>
+        carrera
             .destroy()
-            .then(() => res.status(200).send(`Se elimino permanentemente el registro del ${alumno.nombre}`))
+            .then(() => res.status(200).send(`Se elimino permanentemente el registro de la carrera ${carrera.nombre}`))
             .catch(() => res.sendStatus(500));
-    findAlumnoId(req.params.id, {
+            
+    findCarreraCodigo(req.params.cod_carrera, {
         onSuccess,
         onNotFound: () => res.sendStatus(404),
         onError: () => res.sendStatus(500)
     })
 }
 
-/* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR DNI*/
-const putConDNI = (req, res) => {
-    const onSuccess = alumno => {
-        models.alumno.findOne({
-            where: { nombre: req.body.nombre }
-        })
-            .then(al => al ? res.status(400).send({ message: 'Bad request: existe otro alumno con el mismo nombre' }) :
-                alumno.update({ nombre: req.body.nombre }, { fields: ["nombre"] })
-                    .then(response => res.send(response))
-            )
-            .catch(error => console.log(error))
-    }
-
-    findAlumnoId(req.params.id, {
-        onSuccess,
-        onNotFound: () => res.sendStatus(404),
-        onError: (error) => {
-            console.log(`Error: ${error}`)
-            res.sendStatus(500)
+/* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR cod_carrera*/
+const putConCodigo = async (req, res) => {
+    const { cod_carrera,nombre,cod_departamento } = req.body;
+    try {
+        const carrera = await findCarreraCodigo(req.params.cod_carrera);
+        if (carrera) {
+            const existe = await models.carrera.findOne({
+                attributes: ['cod_carrera', 'nombre', 'cod_departamento'],
+                where: { nombre }
+            })
+            if (existe) {
+                res.status(400).send('Bad request: Ya existe una carrera con el ese nombre')
+            } else {
+                await models.carrera
+                    .update({ nombre, cod_departamento }, { where: { id: req.params.id }, fields: ['cod_carrera', 'nombre', 'cod_departamento'] })
+                res.sendStatus(200)
+            }
+        } else {
+            res.sendStatus(404).send('Bad request: No existe una carrera con el ese codigo de carrera');
         }
-    })
+    } catch (error) {
+        res.status(500).send(`Error al intentar actualizar la base de datos: ${error}`)
+    }
 }
 
 module.exports = {
     get,
-    getConcOD_cARRERA,
+    getConCodigo,
     post,
-    putConDNI,
-    deleteConDNI
-};
+    putConCodigo,
+    deleteConCodigo
 };

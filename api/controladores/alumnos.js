@@ -5,11 +5,11 @@ const models = require('../models');
 
 
 /* DECLARACION DE FUNCION DE BUSQUEDA POR DNI*/
-const findAlumnoDNI = (DNI, { onSuccess, onNotFound, onError }) => {
+const findAlumnoDNI = (dni, { onSuccess, onNotFound, onError }) => {
     models.alumno
         .findOne({
             attributes: ["dni", "nombre"],
-            where: { DNI }
+            where: { dni }
         })
         .then(alumno => (alumno ? onSuccess(alumno) : onNotFound()))
         .catch(() => onError());
@@ -72,7 +72,7 @@ const deleteConDNI = (req, res) => {
             .destroy()
             .then(() => res.status(200).send(`Se elimino permanentemente el registro del ${alumno.nombre}`))
             .catch(() => res.sendStatus(500));
-            
+
     findAlumnoDNI(req.params.dni, {
         onSuccess,
         onNotFound: () => res.sendStatus(404),
