@@ -12,29 +12,29 @@ const findCarreraCodigo = async(cod_carrera) => {
             where: { cod_carrera }
         })
     return carrera
-}
+};
 
 
 
 /* DECLARACION DE LA CONSULTA GENERAL */
 const get = async (req, res) => {
-    const { numPagina, tamanioPagina } = req.query;
-    console.log(typeof numPagina);
-    console.log(typeof tamanioPagina);
+    // const { numPagina, tamanioPagina } = req.query;
+    // console.log(typeof numPagina);
+    // console.log(typeof tamanioPagina);
 
     try {
         const carreras = await models.carrera.findAll({
             attributes: ["id", "nombre", "cod_carrera", "id_departamento"],
-            include:[{as: 'Departamento-Relacionado', model:models.departamento, attributes:["id_departamento", "nombre"]}],
-            offset: (Number(numPagina)- 1) * Number(tamanioPagina),
-            limit: Number(tamanioPagina)
+            // include:[{as: 'Departamento-Relacionado', model:models.departamento, attributes:["id_departamento", "nombre"]}],
+            // offset: (Number(numPagina)- 1) * Number(tamanioPagina),
+            // limit: Number(tamanioPagina)
         });
         res.send(carreras);
     } catch{
         res.sendStatus(500);
     }
     
-}
+};
 
 /* DECLARACION DE LA CONSULTA PARTICULAR POR cod_carrera */ 
 const getConCodigo = async (req, res) => {
@@ -44,7 +44,7 @@ const getConCodigo = async (req, res) => {
     } catch {
         res.sendStatus(500);
     }
-}
+};
 
 
 
@@ -57,12 +57,12 @@ const post = async (req, res) => {
         const name = await models.carrera.findOne({
             attributes: ['cod_carrera', 'nombre', 'cod_departamento'],
             where: { nombre }
-        })
+        });
 
         const cod = models.carrera.findOne({
             attributes: ['cod_carrera', 'nombre', 'cod_departamento'],
             where: { cod_carrera }
-        })
+        });
 
         if (name || cod) {
             res.status(400).send({ message: 'Bad request: existe otra carrera con el mismo nombre o codigo de carrera' })
@@ -74,7 +74,7 @@ const post = async (req, res) => {
     } catch (error) {
         res.status(500).send(`Error al intentar insertar en la base de datos: ${error}`)
     }
-}
+};
 
 
 
@@ -91,7 +91,7 @@ const deleteConCodigo = (req, res) => {
         onNotFound: () => res.sendStatus(404),
         onError: () => res.sendStatus(500)
     })
-}
+};
 
 /* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR cod_carrera*/
 const putConCodigo = async (req, res) => {
@@ -116,7 +116,7 @@ const putConCodigo = async (req, res) => {
     } catch (error) {
         res.status(500).send(`Error al intentar actualizar la base de datos: ${error}`)
     }
-}
+};
 
 module.exports = {
     get,
