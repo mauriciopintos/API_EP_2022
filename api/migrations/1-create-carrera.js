@@ -11,7 +11,7 @@ module.exports = {
       nombre: {
         type: Sequelize.STRING
       },
-      id_departamento: {
+      cod_departamento: {
         type: Sequelize.INTEGER
       },
       cod_carrera: {

@@ -12,7 +12,7 @@ const findCarreraCodigo = async(cod_carrera) => {
             where: { cod_carrera }
         })
     return carrera
-};
+}
 
 
 
@@ -24,7 +24,7 @@ const get = async (req, res) => {
 
     try {
         const carreras = await models.carrera.findAll({
-            attributes: ["id", "nombre", "cod_carrera", "id_departamento"],
+            attributes: ["id", "nombre", "cod_carrera", "cod_departamento"],
             // include:[{as: 'Departamento-Relacionado', model:models.departamento, attributes:["id_departamento", "nombre"]}],
             // offset: (Number(numPagina)- 1) * Number(tamanioPagina),
             // limit: Number(tamanioPagina)
@@ -34,7 +34,7 @@ const get = async (req, res) => {
         res.sendStatus(500);
     }
     
-};
+}
 
 /* DECLARACION DE LA CONSULTA PARTICULAR POR cod_carrera */ 
 const getConCodigo = async (req, res) => {
@@ -44,7 +44,7 @@ const getConCodigo = async (req, res) => {
     } catch {
         res.sendStatus(500);
     }
-};
+}
 
 
 
@@ -54,17 +54,18 @@ const post = async (req, res) => {
     const { cod_carrera,nombre,cod_departamento } = req.body;
 
     try {
+        
         const name = await models.carrera.findOne({
             attributes: ['cod_carrera', 'nombre', 'cod_departamento'],
             where: { nombre }
-        });
+        }) 
 
         const cod = models.carrera.findOne({
             attributes: ['cod_carrera', 'nombre', 'cod_departamento'],
             where: { cod_carrera }
-        });
+        })
 
-        if (name || cod) {
+        if (name == nombre || cod == cod_carrera) {
             res.status(400).send({ message: 'Bad request: existe otra carrera con el mismo nombre o codigo de carrera' })
         } else {
             const nuevaCarrera = await models.carrera
@@ -74,7 +75,7 @@ const post = async (req, res) => {
     } catch (error) {
         res.status(500).send(`Error al intentar insertar en la base de datos: ${error}`)
     }
-};
+}
 
 
 
@@ -91,7 +92,7 @@ const deleteConCodigo = (req, res) => {
         onNotFound: () => res.sendStatus(404),
         onError: () => res.sendStatus(500)
     })
-};
+}
 
 /* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR cod_carrera*/
 const putConCodigo = async (req, res) => {
@@ -116,7 +117,7 @@ const putConCodigo = async (req, res) => {
     } catch (error) {
         res.status(500).send(`Error al intentar actualizar la base de datos: ${error}`)
     }
-};
+}
 
 module.exports = {
     get,
