@@ -19,12 +19,11 @@
 
 
 Entidades principales
-     npx sequelize-cli model:generate --name materia --attributes nombre:string,id_carrera:integer,cod_mat:integer
-     npx sequelize-cli model:generate --name alumno --attributes nombre:string,apellido:string,id_alumno:integer
-     npx sequelize-cli model:generate --name departamento --attributes nombre:string
+     npx sequelize-cli model:generate --name materias --attributes nombre:string,cod_carrera:string
+     npx sequelize-cli model:generate --name alumnos --attributes nombre:string,apellido:string,telefono:integer,cod_carrera:string
+     npx sequelize-cli model:generate --name profesores --attributes nombre:string,apellido:string,cod_materia:string
+     npx sequelize-cli model:generate --name departamentos --attributes nombre:string
 
 Entidades intermedias/relaciones
-     npx sequelize-cli model:generate --name profesor_materia --attributes id_profesor:integer,id_materia:integer
-     npx sequelize-cli model:generate --name estudia --attributes id_alumno:integer,id_carrera:string
-     npx sequelize-cli model:generate --name inscripcion_materia --attributes id_alumno:integer,id_materia:integer
+     npx sequelize-cli model:generate --name inscripciones --attributes DNI_alumno:integer,cod_materia:string
 
