@@ -16,5 +16,5 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'cod_materia'
     })
   };
-  return inscripciones;
+  return inscripciones; 
 };
