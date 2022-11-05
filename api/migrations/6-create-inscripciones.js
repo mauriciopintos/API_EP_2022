@@ -9,10 +9,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       DNI_alumno: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'alumnos',
+          key: 'dni'
+        }
       },
       cod_materia: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        references: {
+          model: 'materias',
+          key: 'cod_materia'
+        }
       },
       createdAt: {
         allowNull: false,

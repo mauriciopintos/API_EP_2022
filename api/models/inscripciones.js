@@ -6,6 +6,15 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   inscripciones.associate = function(models) {
     // associations can be defined here
+    inscripciones.belongsTo(models.alumnos, {
+      as: 'Alumno',
+      foreignKey: 'dni'
+    }),
+    
+    inscripciones.belongsTo(models.materias, {
+      as: 'Materia',
+      foreignKey: 'cod_materia'
+    })
   };
-  return inscripciones;
+  return inscripciones; 
 };
