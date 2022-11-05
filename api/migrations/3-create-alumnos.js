@@ -7,10 +7,6 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      }, 
-      DNI: {
-        unique: true,
-        type: Sequelize.INTEGER
       },
       DNI: {
         unique: true,
