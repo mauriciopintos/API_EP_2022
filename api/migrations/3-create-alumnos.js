@@ -2,10 +2,14 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('alumnos', {
-      DNI: {
+      id: {
         allowNull: false,
-        autoIncrement: false,
+        autoIncrement: true,
         primaryKey: true,
+        type: Sequelize.INTEGER
+      }, 
+      DNI: {
+        unique: true,
         type: Sequelize.INTEGER
       },
       nombre: {
@@ -18,11 +22,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       cod_carrera: {
-        type: Sequelize.STRING,
-        references: {
-          model: 'carreras',
-          key: 'cod_carrera'
-        }
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
