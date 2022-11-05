@@ -9,7 +9,7 @@ const models = require('../models');
 const findCarreraCodigo = (cod_carrera, { onSuccess, onNotFound, onError }) => {
     models.carrera
       .findOne({
-        attributes: ["cod_carrera", "nombre", "cod_departamento"],
+        attributes: ["id","cod_carrera", "nombre", "id_departamento"],
         where: { cod_carrera }
       })
       .then(carrera => (carrera ? onSuccess(carrera) : onNotFound()))
@@ -25,9 +25,9 @@ const get = async (req, res) => {
     // console.log(typeof tamanioPagina);
 
     try {
-        const carreras = await models.carrera.findAll({
-            attributes: ["id", "nombre", "cod_carrera", "cod_departamento"],
-            // include:[{as: 'Departamento-Relacionado', model:models.departamento, attributes:["id_departamento", "nombre"]}],
+        const carreras = await models.carreras.findAll({
+            attributes: ["id", "nombre", "cod_carrera"],
+            include:[{as: 'Departamento-Relacionado', model:models.departamentos, attributes:["nombre"]}]
             // offset: (Number(numPagina)- 1) * Number(tamanioPagina),
             // limit: Number(tamanioPagina)
         });
@@ -53,26 +53,26 @@ const getConCodigo = (req, res) => {
 
 /* DECLARACION DEL ALTA DE UN REGISTRO*/
 const post = async (req, res) => {
-    const { cod_carrera,nombre,cod_departamento } = req.body;
+    const { cod_carrera, nombre, id_departamento } = req.body;
 
     try {
         
-        const name = await models.carrera.findOne({
-            attributes: ['cod_carrera', 'nombre', 'cod_departamento'],
+        const name = await models.carreras.findOne({
+            attributes: ['id','cod_carrera', 'nombre', 'id_departamento'],
             where: { nombre }
         })
 
-        const cod = await models.carrera.findOne({
-            attributes: ['cod_carrera', 'nombre', 'cod_departamento'],
+        const cod = await models.carreras.findOne({
+            attributes: ['id','cod_carrera', 'nombre', 'id_departamento'],
             where: { cod_carrera }
         })
 
         if (name || cod ) {
             res.status(400).send({ message: 'Bad request: existe otra carrera con el mismo nombre o codigo de carrera' })
         } else {
-            const nuevaCarrera = await models.carrera
-                .create({ cod_carrera, nombre, cod_departamento })
-            res.status(201).send({ id: nuevaCarrera.id })
+            const nuevaCarrera = await models.carreras
+                .create({ cod_carrera, nombre, id_departamento })
+            res.status(201).send( `Creacion de Carrera realizado con éxito.`)
         };
     } catch (error) {
         res.status(500).send(`Error al intentar insertar en la base de datos: ${error}`)
@@ -97,19 +97,19 @@ const deleteConCodigo = (req, res) => {
 
 /* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR cod_carrera*/
 const putConCodigo = async (req, res) => {
-    const { cod_carrera,nombre,cod_departamento } = req.body;
+    const { cod_carrera,nombre,id_departamento } = req.body;
     try {
         const carrera = await findCarreraCodigo(req.params.cod_carrera);
         if (carrera) {
-            const existe = await models.carrera.findOne({
-                attributes: ['cod_carrera', 'nombre', 'cod_departamento'],
+            const existe = await models.carreras.findOne({
+                attributes: ['id','cod_carrera', 'nombre', 'id_departamento'],
                 where: { nombre }
             })
             if (existe) {
                 res.status(400).send('Bad request: Ya existe una carrera con el ese nombre')
             } else {
-                await models.carrera
-                    .update({ nombre, cod_departamento }, { where: { id: req.params.id }, fields: ['cod_carrera', 'nombre', 'cod_departamento'] })
+                await models.carreras
+                    .update({ nombre, id_departamento }, { where: { id: req.params.id }, fields: ['cod_carrera', 'nombre', 'id_departamento'] })
                 res.sendStatus(200)
             }
         } else {

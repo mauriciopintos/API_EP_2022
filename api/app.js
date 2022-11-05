@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 // var materiasRouter = require('./routes/materias');
 var carrerasRouter = require('./routes/carreras');
-// var departamentosRouter = require('./routes/departamentos');
+var departamentosRouter = require('./routes/departamentos');
 // var alumnosRouter = require('./routes/alumnos');
 // var profesoresRouter = require('./routes/profesores');
 // var inscripcionesRouter = require('./routes/profesores');
@@ -28,7 +28,7 @@ app.use('/car', carrerasRouter);
 // app.use('/mat', materiasRouter);
 // app.use('/alu', alumnosRouter);
 // app.use('/pro', profesoresRouter);
-// app.use('/dep', departamentosRouter);
+app.use('/dep', departamentosRouter);
 // app.use('/ins', inscripcionesRouter);
 
 // catch 404 and forward to error handler

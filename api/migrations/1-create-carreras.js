@@ -2,17 +2,25 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('carreras', {
-      cod_carrera: {
+      id: {
         allowNull: false,
-        autoIncrement: false,
+        autoIncrement: true,
         primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      cod_carrera: {
+        unique: true,
         type: Sequelize.STRING
       },
       nombre: {
         type: Sequelize.STRING
       },
-      cod_departamento: {
-        type: Sequelize.STRING
+      id_departamento: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'carreras',
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,
