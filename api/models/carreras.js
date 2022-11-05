@@ -5,11 +5,11 @@ module.exports = (sequelize, DataTypes) => {
     cod_departamento: DataTypes.STRING
   }, {});
   carreras.associate = function(models) {
-    
+
   	//asociacion a departamento (pertenece a:)
   	carreras.belongsTo(models.departamentos, { // modelo al que pertenece
       as : 'Carrera_Departamento',  // nombre de mi relacion
-      foreignKey: 'id_dpto'     // campo con el que voy a igualar
+      foreignKey: 'cod_departamento'     // campo con el que voy a igualar
     });
   };
   return carreras;
