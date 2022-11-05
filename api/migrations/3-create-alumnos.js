@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      DNI: {
+      dni: {
         unique: true,
         type: Sequelize.INTEGER
       },
@@ -21,8 +21,12 @@ module.exports = {
       telefono: {
         type: Sequelize.INTEGER
       },
-      cod_carrera: {
-        type: Sequelize.STRING
+      id_carrera: {
+        type: Sequelize.STRING,
+        references: {
+          model: 'carreras',
+          key: 'id'
+        }        
       },
       createdAt: {
         allowNull: false,

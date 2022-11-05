@@ -1,19 +1,19 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const inscripciones = sequelize.define('inscripciones', {
-    DNI_alumno: DataTypes.INTEGER,
-    cod_materia: DataTypes.STRING
+    id_alumno: DataTypes.INTEGER,
+    id_materia: DataTypes.STRING
   }, {});
   inscripciones.associate = function(models) {
     // associations can be defined here
     inscripciones.belongsTo(models.alumnos, {
       as: 'Alumno',
-      foreignKey: 'dni'
+      foreignKey: 'id_alumno'
     }),
     
     inscripciones.belongsTo(models.materias, {
       as: 'Materia',
-      foreignKey: 'cod_materia'
+      foreignKey: 'id_materia'
     })
   };
   return inscripciones; 
