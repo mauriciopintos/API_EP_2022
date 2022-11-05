@@ -8,7 +8,7 @@ const ControladorDepartamentos = require('../controladores/Departamentos');
 router.get('/', ControladorDepartamentos.get);
 router.post('/alta', ControladorDepartamentos.post);
 router.get('/:cod_Departamento', ControladorDepartamentos.getConCodigo );
-router.put('/modificacion/:cod_Departamento', ControladorDepartamentos.putConCodigo);
-router.delete('/baja/:cod_Departamento', ControladorDepartamentos.deleteConCodigo);
+router.put('/modificacion/:cod_departamento', ControladorDepartamentos.putConCodigo);
+router.delete('/baja/:cod_departamento', ControladorDepartamentos.deleteConCodigo);
 
 module.exports = router;

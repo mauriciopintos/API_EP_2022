@@ -8,6 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      DNI: {
+        unique: true,
+        type: Sequelize.INTEGER
+      },
       nombre: {
         type: Sequelize.STRING
       },
