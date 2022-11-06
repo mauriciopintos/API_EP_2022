@@ -14,8 +14,12 @@ module.exports = {
       apellido: {
         type: Sequelize.STRING
       },
-      cod_materia: {
-        type: Sequelize.STRING
+      id_materia: {
+        type: Sequelize.INTEGER
+      },
+
+      dni: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
