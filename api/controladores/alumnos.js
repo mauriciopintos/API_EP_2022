@@ -6,7 +6,7 @@ const models = require('../models');
 
 /* DECLARACION DE FUNCION DE BUSQUEDA POR DNI*/
 const findAlumnoDNI = (dni, { onSuccess, onNotFound, onError }) => {
-    models.alumno
+    models.alumnos
         .findOne({
             attributes: ["dni", "nombre"],
             where: { dni }
@@ -23,10 +23,10 @@ const get = async (req, res) => {
     console.log(typeof tamanioPagina);
 
     try {
-        const alumnos = await models.alumno.findAll({
+        const alumnos = await models.alumnos.findAll({
             attributes: ["id", "nombre", "dni", "id_carrera"],
             include:[{as: 'Carrera-Relacionada', model:models.alumno_carrera, attributes:['id_carrera'], 
-            include:[{as: 'Carrera', model:models.carrera, attributes: ['nombre']}]}],
+            include:[{as: 'Carrera', model:models.carreras, attributes: ['nombre']}]}],
             offset: (Number(numPagina)- 1) * Number(tamanioPagina),
             limit: Number(tamanioPagina)
         });
@@ -50,12 +50,12 @@ const getConDNI = (req, res) => {
 /* DECLARACION DEL ALTA DE UN REGISTRO*/
 const post = (req, res) => {
     const { nombre, id_carrera, dni } = req.body;
-    models.alumno
+    models.alumnos
         .findOne({
             attributes: ["id", "dni", "nombre"],
             where: { dni }
         }).then(al => al ? res.status(400).send({ message: 'Bad request: existe otro alumno con el mismo DNI' }) :
-            models.alumno
+            models.alumnos
                 .create({ nombre, id_carrera })
                 .then(alumno => res.status(200).send(alumno.nombre))
         ).catch((error) => {
@@ -83,7 +83,7 @@ const deleteConDNI = (req, res) => {
 /* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR DNI*/
 const putConDNI = (req, res) => {
     const onSuccess = alumno => {
-        models.alumno.findOne({
+        models.alumnos.findOne({
             where: { nombre: req.body.nombre }
         })
             .then(al => al ? res.status(400).send({ message: 'Bad request: existe otro alumno con el mismo nombre' }) :
