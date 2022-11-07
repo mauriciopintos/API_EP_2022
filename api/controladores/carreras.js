@@ -7,7 +7,7 @@ const models = require('../models');
 /* DECLARACION DE FUNCION DE BUSQUEDA POR cod_carrera*/
 //TRATAR DE IMPLEMENTAR EL ASYNC
 const findCarreraCodigo = (cod_carrera, { onSuccess, onNotFound, onError }) => {
-    models.carrera
+    models.carreras
       .findOne({
         attributes: ["id","cod_carrera", "nombre", "id_departamento"],
         where: { cod_carrera }
@@ -25,14 +25,14 @@ const get = async (req, res) => {
     // console.log(typeof tamanioPagina);
 
     try {
-        const carreras = await models.carreras.findAll({
+        const carrera = await models.carreras.findAll({
             attributes: ["id", "nombre", "cod_carrera"],
             include:[{as: 'Departamento-Relacionado', model:models.departamentos, attributes:["nombre"]}]
             // offset: (Number(numPagina)- 1) * Number(tamanioPagina),
             // limit: Number(tamanioPagina)
         });
-        res.send(carreras);
-    } catch{
+        res.send(carrera);
+    } catch {
         res.sendStatus(500);
     }
     
