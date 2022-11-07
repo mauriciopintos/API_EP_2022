@@ -21,7 +21,6 @@ module.exports = {
           key: 'id'
         }
       },
-
       dni: {
         type: Sequelize.INTEGER
       },

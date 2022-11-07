@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     
   	//asociacion a departamento (pertenece a:)
   	carreras.belongsTo(models.departamentos, { // modelo al que pertenece
-      as : 'Departamento-Relacionado',  // nombre de mi relacion
+      as : 'Carrera-Departamento',  // nombre de mi relacion
       foreignKey: 'id_departamento'     // campo con el que voy a igualar
     });
   };
