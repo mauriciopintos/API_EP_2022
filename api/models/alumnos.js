@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   
   alumnos.associate = function(models) {
   	alumnos.belongsTo(models.carreras, { // modelo al que pertenece
-      as : 'Alumno-Carrera',  // nombre de mi relacion
+      as : 'Carrera-Relacionada',  // nombre de mi relacion
       foreignKey: 'id_carrera'     // campo con el que voy a igualar
     });
   };
