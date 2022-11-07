@@ -16,7 +16,7 @@ module.exports = {
         }
       },
       id_materia: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         references: {
           model: 'materias',
           key: 'id'

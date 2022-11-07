@@ -22,11 +22,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       id_carrera: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         references: {
           model: 'carreras',
           key: 'id'
-        }        
+        }
       },
       createdAt: {
         allowNull: false,
