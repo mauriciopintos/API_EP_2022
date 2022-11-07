@@ -23,14 +23,14 @@ const get = async (req, res) => {
     console.log(typeof tamanioPagina);
 
     try {
-        const alumnos = await models.alumnos.findAll({
-            attributes: ["id", "nombre", "dni", "id_carrera"],
-            include:[{as: 'Carrera-Relacionada', model:models.alumno_carrera, attributes:['id_carrera'], 
-            include:[{as: 'Carrera', model:models.carreras, attributes: ['nombre']}]}],
+        const profesores = await models.profesores.findAll({
+            attributes: ["id", "nombre", "dni", "id_materia"],
+            include:[{as: 'Profesor-Materia', model:models.profesores_materias, attributes:['id_materia'], 
+            include:[{as: 'Materia', model:models.materias, attributes: ['nombre']}]}],
             offset: (Number(numPagina)- 1) * Number(tamanioPagina),
             limit: Number(tamanioPagina)
         });
-        res.send(alumnos);
+        res.send(profesores);
     } catch{
         res.sendStatus(500);
     }
@@ -39,8 +39,8 @@ const get = async (req, res) => {
 
 /* DECLARACION DE LA CONSULTA PARTICULAR POR DNI */
 const getConDNI = (req, res) => {
-    findAlumnoDNI(req.params.dni, {
-        onSuccess: alumno => res.send(alumno),
+    findProfesorDNI(req.params.dni, {
+        onSuccess: profesor => res.send(profesor),
         onNotFound: () => res.sendStatus(404),
         onError: () => res.sendStatus(500)
     });
@@ -49,15 +49,15 @@ const getConDNI = (req, res) => {
 
 /* DECLARACION DEL ALTA DE UN REGISTRO*/
 const post = (req, res) => {
-    const { nombre, id_carrera, dni } = req.body;
-    models.alumnos
+    const { nombre, id_materia, dni } = req.body;
+    models.profesores
         .findOne({
             attributes: ["id", "dni", "nombre"],
             where: { dni }
-        }).then(al => al ? res.status(400).send({ message: 'Bad request: existe otro alumno con el mismo DNI' }) :
-            models.alumnos
-                .create({ nombre, id_carrera })
-                .then(alumno => res.status(200).send(alumno.nombre))
+        }).then(al => al ? res.status(400).send({ message: 'Bad request: existe otro profesor con el mismo DNI' }) :
+            models.profesores
+                .create({ nombre, id_materia })
+                .then(profesor => res.status(200).send(profesor.nombre))
         ).catch((error) => {
             console.log(`Error al intentar insertar en la base de datos: ${error}`)
             res.sendStatus(500)
@@ -67,13 +67,13 @@ const post = (req, res) => {
 
 /* DECLARACION DE LA BAJA DE UN REGISTRO POR DNI*/
 const deleteConDNI = (req, res) => {
-    const onSuccess = alumno =>
-        alumno
+    const onSuccess = profesor =>
+        profesor
             .destroy()
-            .then(() => res.status(200).send(`Se elimino permanentemente el registro del ${alumno.nombre}`))
+            .then(() => res.status(200).send(`Se elimino permanentemente el registro del ${profesor.nombre}`))
             .catch(() => res.sendStatus(500));
 
-    findAlumnoDNI(req.params.dni, {
+    findProfesorDNI(req.params.dni, {
         onSuccess,
         onNotFound: () => res.sendStatus(404),
         onError: () => res.sendStatus(500)
@@ -82,18 +82,18 @@ const deleteConDNI = (req, res) => {
 
 /* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR DNI*/
 const putConDNI = (req, res) => {
-    const onSuccess = alumno => {
-        models.alumnos.findOne({
+    const onSuccess = profesor => {
+        models.profesores.findOne({
             where: { nombre: req.body.nombre }
         })
-            .then(al => al ? res.status(400).send({ message: 'Bad request: existe otro alumno con el mismo nombre' }) :
-                alumno.update({ nombre: req.body.nombre }, { fields: ["nombre"] })
+            .then(al => al ? res.status(400).send({ message: 'Bad request: existe otro profesor con el mismo nombre' }) :
+                profesor.update({ nombre: req.body.nombre }, { fields: ["nombre"] })
                     .then(response => res.send(response))
             )
             .catch(error => console.log(error))
     }
 
-    findAlumnoDNI(req.params.dni, {
+    findProfesorDNI(req.params.dni, {
         onSuccess,
         onNotFound: () => res.sendStatus(404),
         onError: (error) => {
