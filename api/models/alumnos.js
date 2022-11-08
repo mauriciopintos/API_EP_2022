@@ -8,10 +8,17 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   
   alumnos.associate = function(models) {
-  	alumnos.belongsTo(models.carreras, { // modelo al que pertenece
+
+    alumnos.belongsTo(models.carreras, { // modelo al que pertenece
       as : 'Carrera-Relacionada',  // nombre de mi relacion
       foreignKey: 'id_carrera'     // campo con el que voy a igualar
     });
+
+    alumnos.hasMany(models.inscripciones, {
+      as: "Alumno-Inscripto",
+      primaryKey: "id"
+    });
+    
   };
   return alumnos;
 };

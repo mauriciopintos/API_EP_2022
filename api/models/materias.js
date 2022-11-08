@@ -10,6 +10,12 @@ module.exports = (sequelize, DataTypes) => {
       as : 'Materia-Carrera',  // nombre de mi relacion
       foreignKey: 'id_carrera'     // campo con el que voy a igualar
     }); // associations can be defined here
+
+    materias.hasMany(models.inscripciones, {
+      as: "Materia-Inscripta",
+      primaryKey: "id"
+    });
+    
   };
   return materias;
 };

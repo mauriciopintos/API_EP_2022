@@ -18,21 +18,6 @@ const findAlumnoDNI = (dni, { onSuccess, onNotFound, onError }) => {
 
 
 /* DECLARACION DE LA CONSULTA GENERAL */
-const get = (req, res) => {
-    const { numPagina, tamanioPagina } = req.query;
-    console.log(typeof numPagina);
-    console.log(typeof tamanioPagina);
-
-    const alumnos = models.alumnos.findAll({
-        attributes: ["id", "nombre", "dni", "telefono"],
-        include:[{as: 'Carrera-Relacionada', model:models.carreras, attributes: ["id", 'nombre']}],
-        offset: (Number(numPagina)- 1) * Number(tamanioPagina),
-        limit: Number(tamanioPagina)
-    })
-    .then(alumnos => res.send(alumnos))
-    .catch(error => { return next(error)});
-};
-/* 
 const get = async (req, res) => {
     const { numPagina, tamanioPagina } = req.query;
     console.log(typeof numPagina);
@@ -41,10 +26,10 @@ const get = async (req, res) => {
     try {
         const alumnos = await models.alumnos.findAll({
             attributes: ["id", "nombre", "dni", "id_carrera"],
-            include:[{as: 'Carrera-Relacionada', model:models.alumno_carrera, attributes:['id_carrera'], 
-            include:[{as: 'Carrera', model:models.carreras, attributes: ['nombre']}]}]/*,
+            include:[{as: 'Carrera-Relacionada', model:models.carreras, attributes: ["id", 'nombre']}],
+/*
             offset: (Number(numPagina)- 1) * Number(tamanioPagina),
-            limit: Number(tamanioPagina)*//*
+            limit: Number(tamanioPagina)*/
         });
         res.send(alumnos);
     } catch{
@@ -52,7 +37,7 @@ const get = async (req, res) => {
     }
     
 }
- */
+ 
 
 
 /* DECLARACION DE LA CONSULTA PARTICULAR POR DNI */

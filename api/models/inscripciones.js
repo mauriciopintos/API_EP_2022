@@ -9,12 +9,13 @@ module.exports = (sequelize, DataTypes) => {
     inscripciones.belongsTo(models.alumnos, {
       as: 'Inscripcion-Alumno',
       foreignKey: 'id_alumno'
-    }),
+    });
     
     inscripciones.belongsTo(models.materias, {
       as: 'Inscripcion-Materia',
       foreignKey: 'id_materia'
-    })
+    });
+
   };
   return inscripciones; 
 };
