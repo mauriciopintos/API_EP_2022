@@ -27,9 +27,9 @@ const get = async (req, res) => {
         const alumnos = await models.alumnos.findAll({
             attributes: ["id", "nombre", "dni", "id_carrera"],
             include:[{as: 'Carrera-Relacionada', model:models.carreras, attributes: ["id", 'nombre']}],
-/*
+
             offset: (Number(numPagina)- 1) * Number(tamanioPagina),
-            limit: Number(tamanioPagina)*/
+            limit: Number(tamanioPagina),
         });
         res.send(alumnos);
     } catch{
