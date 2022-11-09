@@ -87,27 +87,27 @@ const deleteConDNI = (req, res) => {
 }
 
 /* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR DNI*/
-const putConDNI = (req, res) => {
-    const onSuccess = alumno => {
-        models.alumnos.findOne({
-            where: { nombre: req.body.nombre }
-        })
-            .then(al => al ? res.status(400).send({ message: 'Bad request: existe otro alumno con el mismo nombre' }) :
-                alumno.update({ nombre: req.body.nombre }, { fields: ["nombre"] })
-                    .then(response => res.send(response))
-            )
-            .catch(error => console.log(error))
-    }
-
-    findAlumnoDNI(req.params.dni, {
-        onSuccess,
-        onNotFound: () => res.sendStatus(404),
-        onError: (error) => {
-            console.log(`Error: ${error}`)
-            res.sendStatus(500)
+const putConDNI = async (req, res) => {
+    const { dni, nombre, apellido, telefono, id_carrera } = req.body;
+    const dni_buscado = req.params.dni
+    try {
+        const alu_dni = await models.alumnos.findOne({
+          attributes: ["id"],
+          where: {dni: dni_buscado}
+        });
+  
+        if (!alu_dni) {
+            res.status(400).send({ message: 'Bad request: No existe un alumno con DNI: ' + dni_buscado })
+        } else {
+          const alumnoActualizado = await alu_dni.update({ dni: dni, nombre: nombre, apellido: apellido, telefono: telefono, id_carrera: id_carrera },
+            { fields: ["dni", "nombre", "apellido", "telefono", "id_carrera"] })
+          res.status(200).send( { alumno_actualizado: alu_dni.id} )
         }
-    })
+    } catch (error) {
+        res.sendStatus(500).send(`Error al intentar insertar en la base de datos: ${error}`)
+    }
 }
+
 
 module.exports = {
     get,
