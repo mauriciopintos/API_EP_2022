@@ -19,17 +19,17 @@ const findAlumnoDNI = (dni, { onSuccess, onNotFound, onError }) => {
 
 /* DECLARACION DE LA CONSULTA GENERAL */
 const get = async (req, res) => {
-    const { numPagina, tamanioPagina } = req.query;
-    console.log(typeof numPagina);
-    console.log(typeof tamanioPagina);
+    const { Pagina, Registros } = req.query;
+    console.log(typeof Pagina);
+    console.log(typeof Registros);
 
     try {
         const alumnos = await models.alumnos.findAll({
-            attributes: ["id", "nombre", "dni", "id_carrera"],
-            include:[{as: 'Carrera-Relacionada', model:models.carreras, attributes: ["id", 'nombre']}],
+            attributes: ["id", "nombre", "dni"],
+            include:[{as: 'Carrera-Relacionada', model:models.carreras, attributes: ["cod_carrera", 'nombre']}],
 
-            offset: (Number(numPagina)- 1) * Number(tamanioPagina),
-            limit: Number(tamanioPagina),
+            offset: (Number(Pagina)- 1) * Number(Registros),
+            limit: Number(Registros),
         });
         res.send(alumnos);
     } catch{
@@ -37,7 +37,6 @@ const get = async (req, res) => {
     }
     
 }
- 
 
 
 /* DECLARACION DE LA CONSULTA PARTICULAR POR DNI */
@@ -51,20 +50,24 @@ const getConDNI = (req, res) => {
 
 
 /* DECLARACION DEL ALTA DE UN REGISTRO*/
-const post = (req, res) => {
-    const { nombre, id_carrera, dni } = req.body;
-    models.alumnos
-        .findOne({
-            attributes: ["id", "dni", "nombre"],
+const post = async (req, res) => {
+    const { dni, nombre, apellido, telefono, id_carrera } = req.body;
+    try {
+        const alu_dni = await models.alumnos.findOne({
+            attributes: ["dni"],
             where: { dni }
-        }).then(al => al ? res.status(400).send({ message: 'Bad request: existe otro alumno con el mismo DNI' }) :
-            models.alumnos
-                .create({ nombre, id_carrera })
-                .then(alumno => res.status(200).send(alumno.nombre))
-        ).catch((error) => {
-            console.log(`Error al intentar insertar en la base de datos: ${error}`)
-            res.sendStatus(500)
         })
+
+        if (alu_dni) {
+            res.status(400).send({ message: 'Bad request: existe otro alumno con el mismo DNI' })
+        } else {
+            const nuevoAlumno = await models.alumnos
+                .create({ dni, nombre, apellido, telefono, id_carrera})
+            res.status(200).send( { alumno_ingresado: nuevoAlumno.nombre + " " + nuevoAlumno.apellido  } )
+        }
+    } catch (error) {
+        res.sendStatus(500).send(`Error al intentar insertar en la base de datos: ${error}`)
+    }
 }
 
 

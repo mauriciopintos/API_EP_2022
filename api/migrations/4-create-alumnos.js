@@ -9,6 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       dni: {
+        allowNull: false,
         unique: true,
         type: Sequelize.INTEGER
       },
