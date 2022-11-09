@@ -6,6 +6,7 @@ const models = require('../models');
 const ControladorAlumnos = require('../controladores/alumnos');
 
 router.get('/', ControladorAlumnos.get);
+router.get('/pag', ControladorAlumnos.getPaginado);
 router.post('/alta', ControladorAlumnos.post);
 router.get('/:dni', ControladorAlumnos.getConDNI );
 router.put('/modificacion/:dni', ControladorAlumnos.putConDNI);
