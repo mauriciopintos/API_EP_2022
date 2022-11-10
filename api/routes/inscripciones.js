@@ -3,12 +3,13 @@
 const express = require('express');
 const router = express.Router();
 const models = require('../models');
-const Controladorinscripciones = require('../controladores/inscripciones');
+const ControladorInscripciones = require('../controladores/inscripciones');
 
-router.get('/', Controladorinscripciones.get);
-router.post('/alta', Controladorinscripciones.post);
-router.get('/:cod_inscripcion', Controladorinscripciones.getConCodigo );
-router.put('/modificacion/:cod_inscripcion', Controladorinscripciones.putConCodigo);
-router.delete('/baja/:cod_inscripcion', Controladorinscripciones.deleteConCodigo);
+router.get('/', ControladorInscripciones.get);
+router.get('/pag', ControladorInscripciones.getPaginado);
+router.get('/alu/:dni', ControladorInscripciones.getConDNI );
+router.post('/alta', ControladorInscripciones.post);
+router.put('/modificacion/:dni/:cod_inscripcion', ControladorInscripciones.putConDNIyCodigo);
+router.delete('/baja/:dni/:cod_inscripcion', ControladorInscripciones.deleteConDNIyCodigo);
 
 module.exports = router;

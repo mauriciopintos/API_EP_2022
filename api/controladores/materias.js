@@ -4,6 +4,25 @@ PARA ELLO SE UTILIZO EL CONCEPTO DE ABM (Alta/Baja/Modificacion) */
 const models = require('../models');
 
 
+/* DECLARACION DE FUNCIONES AUXILIARES */
+// OBTENET EL ID DE MATERIA A PARTIR DEL COD_MATERIA
+async function getMateriaPorCod(codMateria) {
+    try {
+        const materia = await models.materias.findOne({
+            attributes: ["id", "cod_materia", "nombre", "id_carrera"],
+            include:[{as: 'Materia-Carrera', model:models.carreras, attributes:["nombre"]}],
+            where: { cod_materia: codMateria }
+        });
+  
+        if (materia) { return materia }
+
+    } catch (error) {
+        res.sendStatus(500).send(`Error al intentar consultar el registro ${codMateria} en la base de datos: ${error}`)
+    }
+}
+
+
+
 /* DECLARACION DE FUNCION DE BUSQUEDA POR cod_carrera*/
 //TRATAR DE IMPLEMENTAR EL ASYNC
 const findMateriaCodigo = (cod_materia, { onSuccess, onNotFound, onError }) => {

@@ -3,6 +3,43 @@ PARA ELLO SE UTILIZO EL CONCEPTO DE ABM (Alta/Baja/Modificacion) */
 
 const models = require('../models');
 
+
+/* DECLARACION DE FUNCIONES AUXILIARES */
+// OBTENER EL ID DE ALUMNO A PARTIR DEL DNI
+async function getAlumnoPorDNI(dniAlumno) {
+    try {
+        const alumno = await models.alumnos.findOne({
+            attributes: ["id", "nombre", "dni", "telefono"],
+            include:[{as: 'Carrera-Relacionada', model:models.carreras, attributes: ["id", 'nombre']}],
+            where: { dni: dniAlumno }
+        });
+  
+        if (alumno) { return alumno }
+
+    } catch (error) {
+        res.sendStatus(500).send( { message: `Error al intentar consultar el registro ${dniAlumno} en la base de datos: ${error}`})
+    }
+}
+
+// // OBTENER UN ALUMNO A PARTIR DEL ID
+// async function getAlumnoPorId(idAlumno) {
+//     try {
+//         const alumno = await models.alumnos.findOne({
+//             attributes: ["id"],
+//             where: { id: idAlumno }
+//         });
+  
+//         if (alumno) {
+//             return alumno
+//         } else {
+//             res.status(400).send( { message: `No existe un alumno con ID: ${idAlumno }`})
+//         }
+//     } catch (error) {
+//         res.sendStatus(500).send( { message: `Error al intentar consultar el registro ${idAlumno} en la base de datos: ${error}`})
+//     }
+// }
+
+
 /* DECLARACION DE LA CONSULTA GENERAL */
 const get = async (req, res) => {
     try {
@@ -12,7 +49,7 @@ const get = async (req, res) => {
         });
         res.send(alumnos);
     } catch (error) {
-        res.sendStatus(500).send(`Error al intentar acceder a los datos: ${error}`)
+        res.sendStatus(500).send( { message: `Error al intentar acceder a los datos: ${error}`})
     }
 }
 
@@ -20,9 +57,6 @@ const get = async (req, res) => {
 /* DECLARACION DE LA CONSULTA GENERAL PAGINADA */
 const getPaginado = async (req, res) => {
     const { Pagina, Registros } = req.query;
-    console.log(typeof Pagina);
-    console.log(typeof Registros);
-
     try {
         const alumnos = await models.alumnos.findAll({
             attributes: ["id", "nombre", "dni"],
@@ -33,73 +67,54 @@ const getPaginado = async (req, res) => {
         });
         res.send(alumnos);
     } catch (error) {
-        res.sendStatus(500).send(`Error al intentar acceder a los datos: ${error}`)
+        res.sendStatus(500).send( { message: `Error al intentar acceder a los datos: ${error}`})
     }
 }
 
-
 /* DECLARACION DE LA CONSULTA PARTICULAR POR DNI */
 const getConDNI = async (req, res) => {
-    const dni_buscado = req.params.dni
-    try {
-        const alu_dni = await models.alumnos.findOne({
-            attributes: ["id", "nombre", "dni", "telefono"],
-            include:[{as: 'Carrera-Relacionada', model:models.carreras, attributes: ["id", 'nombre']}],
-            where: { dni: dni_buscado }
-        });
-  
-        if (alu_dni) {
-            res.send(alu_dni)
-        } else {
-            res.status(400).send({ message: `No existe un alumno con DNI: ${dni_buscado }` })
-        }
-    } catch (error) {
-        res.sendStatus(500).send(`Error al intentar consultar el registro ${dni_buscado} en la base de datos: ${error}`)
+    const dniAlumno = req.params.dni;
+    const alumno = await getAlumnoPorDNI(dniAlumno);
+    if (alumno) {
+        res.send(alumno)
+    } else {
+        res.status(400).send( { message: `No existe un alumno con DNI: ${dniAlumno }`})
     }
-  }
+}
 
 
 /* DECLARACION DEL ALTA DE UN REGISTRO*/
 const post = async (req, res) => {
     const { dni, nombre, apellido, telefono, id_carrera } = req.body;
-    
     try {
-        const alu_dni = await models.alumnos.findOne({
-            attributes: ["dni"],
-            where: { dni }
-        })
-
-        if (alu_dni) {
-            res.status(400).send({ message: 'Existe otro alumno con el mismo DNI' })
+        const alumno = await getAlumnoPorDNI(dni);
+        if (alumno) {
+            res.status(400).send( { message: 'Existe otro alumno con el mismo DNI'})
         } else {
             const nuevoAlumno = await models.alumnos
                 .create({ dni, nombre, apellido, telefono, id_carrera})
-            res.status(200).send( { alumno_ingresado: nuevoAlumno.nombre + " " + nuevoAlumno.apellido  } )
+            res.status(200).send( { message: `alumno_ingresado: ${nuevoAlumno.nombre} ${nuevoAlumno.apellido}` })
         }
     } catch (error) {
-        res.sendStatus(500).send(`Error al intentar insertar en la base de datos: ${error}`)
+        res.sendStatus(500).send( { message: `Error al intentar insertar en la base de datos: ${error}`})
     }
 }
 
 
 /* DECLARACION DE LA BAJA DE UN REGISTRO POR DNI*/
 const deleteConDNI = async (req, res) => {
-    const dni_buscado = req.params.dni
+    const dniAlumno = req.params.dni;
     try {
-        const alu_dni = await models.alumnos.findOne({
-          attributes: ["id"],
-          where: {dni: dni_buscado}
-        });
-  
-        if (!alu_dni) {
-            res.status(400).send({ message: `No existe un alumno con DNI: ${dni_buscado}` })
+        const alumno = await getAlumnoPorDNI(dniAlumno);
+        if (alumno) {
+            let registroEliminado = alumno.id;
+            await alumno.destroy()
+            res.status(200).send( { message: `Se elimino permanentemente el registro con ID: ${registroEliminado}`})
         } else {
-          let registroEliminado = alu_dni.id;
-          await alu_dni.destroy()
-          res.status(200).send({message: `Se elimino permanentemente el registro con ID: ${registroEliminado}`})
+            res.status(400).send( { message: `No existe un alumno con DNI: ${dniAlumno}`})
         }
     } catch (error) {
-        res.sendStatus(500).send({message: `Error al intentar eliminar el registro ${alu_dni.id} en la base de datos: ${error}` })
+        res.sendStatus(500).send( { message: `Error al intentar eliminar el registro ${alumno.id} en la base de datos: ${error}`})
     }
   }
 
@@ -107,27 +122,23 @@ const deleteConDNI = async (req, res) => {
 /* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR DNI*/
 const putConDNI = async (req, res) => {
     const { dni, nombre, apellido, telefono, id_carrera } = req.body;
-    const dni_buscado = req.params.dni;
+    const dniAlumno = req.params.dni;
     try {
-        const alu_dni = await models.alumnos.findOne({
-          attributes: ["id"],
-          where: {dni: dni_buscado}
-        });
-  
-        if (!alu_dni) {
-            res.status(400).send({ message: `No existe un alumno con DNI: ${dni_buscado}` })
-        } else {
-          const alumnoActualizado = await alu_dni.update({ dni: dni, nombre: nombre, apellido: apellido, telefono: telefono, id_carrera: id_carrera },
+        const alumno = await getAlumnoPorDNI(dniAlumno);
+        if (alumno) {
+          const alumnoActualizado = await alumno.update({ dni: dni, nombre: nombre, apellido: apellido, telefono: telefono, id_carrera: id_carrera },
             { fields: ["dni", "nombre", "apellido", "telefono", "id_carrera"] })
-          res.status(200).send( { alumno_actualizado: alu_dni.id} )
+          res.status(200).send( { message:  { alumno_actualizado: alumno.id} })
+        } else {
+            res.status(400).send( { message: `No existe un alumno con DNI: ${dniAlumno}`})
         }
     } catch (error) {
-        res.sendStatus(500).send(`Error al intentar insertar en la base de datos: ${error}`)
+        res.sendStatus(500).send( { message: `Error al intentar insertar en la base de datos: ${error}`})
     }
 }
 
-
 module.exports = {
+    getAlumnoPorDNI,
     get,
     getPaginado,
     getConDNI,
