@@ -21,24 +21,6 @@ async function getAlumnoPorDNI(dniAlumno) {
     }
 }
 
-// // OBTENER UN ALUMNO A PARTIR DEL ID
-// async function getAlumnoPorId(idAlumno) {
-//     try {
-//         const alumno = await models.alumnos.findOne({
-//             attributes: ["id"],
-//             where: { id: idAlumno }
-//         });
-  
-//         if (alumno) {
-//             return alumno
-//         } else {
-//             res.status(400).send( { message: `No existe un alumno con ID: ${idAlumno }`})
-//         }
-//     } catch (error) {
-//         res.sendStatus(500).send( { message: `Error al intentar consultar el registro ${idAlumno} en la base de datos: ${error}`})
-//     }
-// }
-
 
 /* DECLARACION DE LA CONSULTA GENERAL */
 const get = async (req, res) => {

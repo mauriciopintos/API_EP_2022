@@ -108,39 +108,49 @@ const getPaginado = async (req, res) => {
 
 /* DECLARACION DEL ALTA DE UN REGISTRO*/
 const post = async (req, res) => {
-    //const { dni, cod_materia } = req.query;
-    const dniAlumno = req.params.dni;
-    const idMateria = req.params.id_materia;
-
-    console.log(typeof dniAlumno);
-    // console.log(typeof cod_materia);
-
-    const alumno = await alumnoControl.getAlumnoPorDNI(dniAlumno);
-    //const materia = await materiaControl.getMateriaPorCod(codMateria);
-    console.log(typeof alumno);
-    //console.log(typeof materia);
-
-    const idAlumno = {id_alumno: alumno.id};
-    //const idMateria = materia.id; //{id_materia: materia.id}
+    const { id_alumno, id_carrera } = req.body;
     try {
-        // const insc_alu = await models.inscripciones.findOne({
-        //     attributes: ["id"],
-        //     where: { id_alumno: idAlumno }
-        // })
-        console.log(alumno)
-        //console.log(materia)
-
-        if (idAlumno && idMateria) {
-            const nuevaInscripcion = await models.inscripciones
-                .create({ idAlumno, idMateria})
-            res.status(200).send( { inscripcion_registrada: id } )             
-        } else {   
-            res.status(400).send({ message: 'Verifique los valores de DNI y/o Codigo de Materia' })
-            }
+        const nuevaInscripcion = await models.inscripciones
+            .create({ id_alumno, id_carrera})
+        res.status(200).send( { message: `inscripcion_resgistrada con id: ${nuevaInscripcion.id}` })
     } catch (error) {
-        res.sendStatus(500).send(`Error al intentar insertar en la base de datos: ${error}`)
+        res.sendStatus(500).send( { message: `Error al intentar insertar en la base de datos: ${error}`})
     }
 }
+
+    // //const { dni, cod_materia } = req.query;
+    // const dniAlumno = req.params.dni;
+    // const idMateria = req.params.id_materia;
+
+    // console.log(typeof dniAlumno);
+//     // console.log(typeof cod_materia);
+
+//     const alumno = await alumnoControl.getAlumnoPorDNI(dniAlumno);
+//     //const materia = await materiaControl.getMateriaPorCod(codMateria);
+//     console.log(typeof alumno);
+//     //console.log(typeof materia);
+
+//     const idAlumno = {id_alumno: alumno.id};
+//     //const idMateria = materia.id; //{id_materia: materia.id}
+//     try {
+//         // const insc_alu = await models.inscripciones.findOne({
+//         //     attributes: ["id"],
+//         //     where: { id_alumno: idAlumno }
+//         // })
+//         console.log(alumno)
+//         //console.log(materia)
+
+//         if (idAlumno && idMateria) {
+//             const nuevaInscripcion = await models.inscripciones
+//                 .create({ idAlumno, idMateria})
+//             res.status(200).send( { inscripcion_registrada: id } )             
+//         } else {   
+//             res.status(400).send({ message: 'Verifique los valores de DNI y/o Codigo de Materia' })
+//             }
+//     } catch (error) {
+//         res.sendStatus(500).send(`Error al intentar insertar en la base de datos: ${error}`)
+//     }
+// }
 
 
 /* DECLARACION DE LA BAJA DE UN REGISTRO POR DNI*/

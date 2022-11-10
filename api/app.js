@@ -3,11 +3,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-// var materiasRouter = require('./routes/materias');
+var materiasRouter = require('./routes/materias');
 var carrerasRouter = require('./routes/carreras');
 var departamentosRouter = require('./routes/departamentos');
 var alumnosRouter = require('./routes/alumnos');
-// var profesoresRouter = require('./routes/profesores');
+var profesoresRouter = require('./routes/profesores');
 var inscripcionesRouter = require('./routes/inscripciones');
 
 
@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/car', carrerasRouter);
-//app.use('/mat', materiasRouter);
+app.use('/mat', materiasRouter);
 app.use('/alu', alumnosRouter);
 app.use('/pro', profesoresRouter);
 app.use('/dep', departamentosRouter);
