@@ -7,7 +7,7 @@ var logger = require('morgan');
 var carrerasRouter = require('./routes/carreras');
 var departamentosRouter = require('./routes/departamentos');
 var alumnosRouter = require('./routes/alumnos');
- var profesoresRouter = require('./routes/profesores');
+var profesoresRouter = require('./routes/profesores');
 // var inscripcionesRouter = require('./routes/profesores');
 
 
