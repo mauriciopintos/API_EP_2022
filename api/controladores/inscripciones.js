@@ -141,23 +141,27 @@ const post = async (req, res) => {
 
 /* DECLARACION DE LA BAJA DE UN REGISTRO POR DNI*/
 const deleteConDNIyCodigo = async (req, res) => {
-    // const dniAlumno = req.params.dni
-    // try {
-    //     const alu_dni = await models.inscripciones.findOne({
-    //       attributes: ["id"],
-    //       where: {dni: dniAlumno}
-    //     });
+    const dniAlumno = req.params.dni;
+    const alumno = await alumnoControl.getAlumnoPorDNI(dniAlumno);
+    
+    const codMateria = req.params.cod_materia;
+    const materia = await materiaControl.getMateriaPorCod(codMateria);
+    try {
+        const inscripcion = await models.inscripciones.findOne({
+          attributes: ["id"],
+          where: {id_alumno: alumno.id, id_materia: materia.id}
+        });
   
-    //     if (!alu_dni) {
-    //         res.status(400).send({ message: `No existe un inscripcion con DNI: ${dniAlumno}` })
-    //     } else {
-    //       let registroEliminado = alu_dni.id;
-    //       await alu_dni.destroy()
-    //       res.status(200).send({message: `Se elimino permanentemente el registro con ID: ${registroEliminado}`})
-    //     }
-    // } catch (error) {
-    //     res.sendStatus(500).send({message: `Error al intentar eliminar el registro ${alu_dni.id} en la base de datos: ${error}` })
-    // }
+        if (inscripcion) {
+            let registroEliminado = inscripcion.id;
+            await inscripcion.destroy()
+            res.status(200).send({message: `Se elimino permanentemente el registro con ID: ${registroEliminado}`})
+        } else {
+            res.status(400).send({ message: `No existe un inscripcion con DNI: ${dniAlumno} y materia codigo: ${codMateria}` })
+        }
+    } catch (error) {
+        res.sendStatus(500).send({message: `Error al intentar eliminar el registro ${inscripcion.id} en la base de datos: ${error}` })
+    }
   }
 
 

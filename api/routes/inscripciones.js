@@ -10,7 +10,7 @@ router.get('/pag', ControladorInscripciones.getPaginado);
 router.get('/alu/:dni', ControladorInscripciones.getConDNI );
 router.get('/mat/:cod_materia', ControladorInscripciones.getConCodigo);
 router.post('/alta', ControladorInscripciones.post);
-router.put('/modificacion/:dni/:cod_inscripcion', ControladorInscripciones.putConDNIyCodigo);
-router.delete('/baja/:dni/:cod_inscripcion', ControladorInscripciones.deleteConDNIyCodigo);
+router.put('/modificacion/:dni/:cod_materia', ControladorInscripciones.putConDNIyCodigo);
+router.delete('/baja/:dni/:cod_materia', ControladorInscripciones.deleteConDNIyCodigo);
 
 module.exports = router;
