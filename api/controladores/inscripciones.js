@@ -165,10 +165,10 @@ const deleteConDNIyCodigo = async (req, res) => {
   }
 
 
-/* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR DNI*/
+/* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR DNI*/ 
 const putConDNIyCodigo = async (req, res) => {
     const { id_alumno, id_materia } = req.body;
-    
+
     const dniAlumno = req.params.dni;
     const alumno = await alumnoControl.getAlumnoPorDNI(dniAlumno);
     
