@@ -41,24 +41,46 @@ const get = async (req, res) => {
     }
 }
 
-
 /* DECLARACION DE LA CONSULTA PARTICULAR POR DNI */
 const getConDNI = async (req, res) => {
     const dniAlumno = req.params.dni;
-    const idAlumno = await alumnoControl.getIdAlumno(dniAlumno);
+    const alumno = await alumnoControl.getAlumnoPorDNI(dniAlumno);
     try {
-        const materiasAlumno = await models.inscripciones.findOne({
-            attributes: ["id"],
-            include:[
-                {as: 'Alumno-Inscripto', model:models.alumnos, attributes: ["dni", 'nombre', 'apellido']},
-                {as: 'Materia-Inscripta', model:models.materias, attributes: ["cod_materia", 'nombre']}
-            ],
-            where: { id_alumno: idAlumno }
-        });
-    res.send(materiasAlumno);
+        if (alumno) {
+            const Materias_Inscriptas = await models.inscripciones.findAll({
+                attributes: ["id"],
+                include:[{as: 'Materia-Inscripta', model:models.materias, attributes: ["cod_materia", 'nombre']}],
+                where: { id_alumno: alumno.id }
+            });
+            res.send({alumno, Materias_Inscriptas});           
+        } else {
+            res.status(400).send( { message: `No existe un alumno con DNI: ${dniAlumno }`})
+        }
 
     } catch (error) {
         res.sendStatus(500).send(`Error al intentar consultar el registro para el alumno con DNI: ${dniAlumno} en la base de datos: ${error}`)
+    }
+}
+
+ 
+/* DECLARACION DE LA CONSULTA PARTICULAR POR CODIGO DE MATERIA */
+const getConCodigo = async (req, res) => {
+    const codMateria = req.params.cod_materia;
+    const materia = await materiaControl.getMateriaPorCod(codMateria);
+    try {
+        if (materia) {
+            const Alumnos_Inscriptos = await models.inscripciones.findAll({
+                attributes: ["id"],
+                include:[{as: 'Alumno-Inscripto', model:models.alumnos, attributes: ["dni", 'nombre', 'apellido']}],
+                where: { id_materia: materia.id }
+            });
+            res.send({materia, Alumnos_Inscriptos});            
+        } else {
+            res.status(400).send( { message: `No existe una materia con codigo: ${codMateria}`})
+        }
+
+    } catch (error) {
+        res.sendStatus(500).send(`Error al intentar consultar el registro para la materia con codigo: ${codMateria}} en la base de datos: ${error}`)
     }
 }
 
@@ -86,22 +108,35 @@ const getPaginado = async (req, res) => {
 
 /* DECLARACION DEL ALTA DE UN REGISTRO*/
 const post = async (req, res) => {
-    const { dni, cod_materia } = req.body;
-    const id_alumno = await alumnoControl.getIdAlumno(cod_materia)
-    const idMateria = getIdMateria(cod_materia)
-    try {
-        const alumno = await models.inscripciones.findOne({
-            attributes: ["dni"],
-            where: { dni }
-        })
+    //const { dni, cod_materia } = req.query;
+    const dniAlumno = req.params.dni;
+    const idMateria = req.params.id_materia;
 
-        if (alu_dni) {
-            res.status(400).send({ message: 'Existe otro inscripcion con el mismo DNI' })
-        } else {
-            const nuevoinscripcion = await models.inscripciones
-                .create({ dni, nombre, apellido, telefono, id_carrera})
-            res.status(200).send( { inscripcion_ingresado: nuevoinscripcion.nombre + " " + nuevoinscripcion.apellido  } )
-        }
+    console.log(typeof dniAlumno);
+    // console.log(typeof cod_materia);
+
+    const alumno = await alumnoControl.getAlumnoPorDNI(dniAlumno);
+    //const materia = await materiaControl.getMateriaPorCod(codMateria);
+    console.log(typeof alumno);
+    //console.log(typeof materia);
+
+    const idAlumno = {id_alumno: alumno.id};
+    //const idMateria = materia.id; //{id_materia: materia.id}
+    try {
+        // const insc_alu = await models.inscripciones.findOne({
+        //     attributes: ["id"],
+        //     where: { id_alumno: idAlumno }
+        // })
+        console.log(alumno)
+        //console.log(materia)
+
+        if (idAlumno && idMateria) {
+            const nuevaInscripcion = await models.inscripciones
+                .create({ idAlumno, idMateria})
+            res.status(200).send( { inscripcion_registrada: id } )             
+        } else {   
+            res.status(400).send({ message: 'Verifique los valores de DNI y/o Codigo de Materia' })
+            }
     } catch (error) {
         res.sendStatus(500).send(`Error al intentar insertar en la base de datos: ${error}`)
     }
@@ -156,6 +191,7 @@ const putConDNIyCodigo = async (req, res) => {
 module.exports = {
     get,
     getConDNI,
+    getConCodigo,
     getPaginado,
     post,
     putConDNIyCodigo,

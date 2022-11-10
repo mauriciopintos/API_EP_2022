@@ -140,6 +140,7 @@ const putConCodigo = async (req, res) => {
 }
 
 module.exports = {
+    getMateriaPorCod,
     get,
     getConCodigo,
     post,
