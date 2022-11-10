@@ -157,7 +157,7 @@ const deleteConDNIyCodigo = async (req, res) => {
             await inscripcion.destroy()
             res.status(200).send({message: `Se elimino permanentemente el registro con ID: ${registroEliminado}`})
         } else {
-            res.status(400).send({ message: `No existe un inscripcion con DNI: ${dniAlumno} y materia codigo: ${codMateria}` })
+            res.status(400).send({ message: `No existe una inscripcion con DNI: ${dniAlumno} y materia codigo: ${codMateria}` })
         }
     } catch (error) {
         res.sendStatus(500).send({message: `Error al intentar eliminar el registro ${inscripcion.id} en la base de datos: ${error}` })
@@ -167,7 +167,32 @@ const deleteConDNIyCodigo = async (req, res) => {
 
 /* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR DNI*/
 const putConDNIyCodigo = async (req, res) => {
-    // const { dni, nombre, apellido, telefono, id_carrera } = req.body;
+    const { id_alumno, id_materia } = req.body;
+    
+    const dniAlumno = req.params.dni;
+    const alumno = await alumnoControl.getAlumnoPorDNI(dniAlumno);
+    
+    const codMateria = req.params.cod_materia;
+    const materia = await materiaControl.getMateriaPorCod(codMateria);
+    try {
+        const inscripcion = await models.inscripciones.findOne({
+          attributes: ["id"],
+          where: {id_alumno: alumno.id, id_materia: materia.id}
+        });
+  
+        if (inscripcion) {
+            const inscripcionActualizada = await inscripcion.update({ id_alumno: id_alumno, id_materia: id_materia },
+                { fields: ["id_alumno", "id_materia"] })
+            res.status(200).send( { inscripcion_actualizado: inscripcion.id} )
+        } else {
+            res.status(400).send({ message: `No existe una inscripcion con DNI: ${dniAlumno} y materia codigo: ${codMateria}` })
+        }
+    } catch (error) {
+        res.sendStatus(500).send({message: `Error al intentar actualizar el registro ${inscripcion.id} en la base de datos: ${error}` })
+    }
+  }
+  
+  // const { dni, nombre, apellido, telefono, id_carrera } = req.body;
     // const dniAlumno = req.params.dni;
     // try {
     //     const alu_dni = await models.inscripciones.findOne({
@@ -185,7 +210,7 @@ const putConDNIyCodigo = async (req, res) => {
     // } catch (error) {
     //     res.sendStatus(500).send(`Error al intentar insertar en la base de datos: ${error}`)
     // }
-}
+
 
 
 module.exports = {
