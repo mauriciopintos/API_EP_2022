@@ -6,6 +6,7 @@ const models = require('../models');
 const ControladorCarreras = require('../controladores/Carreras');
 
 router.get('/', ControladorCarreras.get);
+router.get('/pag', ControladorCarreras.getPaginado); //ARREGLAR
 router.post('/alta', ControladorCarreras.post);
 router.get('/:cod_carrera', ControladorCarreras.getConCodigo );
 router.put('/modificacion/:cod_carrera', ControladorCarreras.putConCodigo);

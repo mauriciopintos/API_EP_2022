@@ -3,50 +3,55 @@ PARA ELLO SE UTILIZO EL CONCEPTO DE ABM (Alta/Baja/Modificacion) */
 
 const models = require('../models');
 
-
-/* DECLARACION DE FUNCION DE BUSQUEDA POR cod_departamento*/
-//TRATAR DE IMPLEMENTAR EL ASYNC
-const findDepartamentoCodigo = (cod_departamento, { onSuccess, onNotFound, onError }) => {
-    models.departamentos
-      .findOne({
-        attributes: ['id','cod_departamento', 'nombre'],
-        where: { cod_departamento }
-      })
-      .then(departamento => (departamento ? onSuccess(departamento) : onNotFound()))
-      .catch(() => onError());
-  };
-
-
-
 /* DECLARACION DE LA CONSULTA GENERAL */
 const get = async (req, res) => {
-    // const { numPagina, tamanioPagina } = req.query;
-    // console.log(typeof numPagina);
-    // console.log(typeof tamanioPagina);
-
     try {
         const departamentos = await models.departamentos.findAll({
             attributes: ['id','cod_departamento', 'nombre']
-            // offset: (Number(numPagina)- 1) * Number(tamanioPagina),
-            // limit: Number(tamanioPagina)
         });
         res.send(departamentos);
-    } catch{
-        res.sendStatus(500);
+    } catch (error){
+        res.sendStatus(500).send(`Error al intentar acceder a los datos: ${error}`);
     }
-    
+}
+
+/* DECLARACION DE LA CONSULTA GENERAL PAGINADA */
+//ARREGLAR
+const getPaginado = async (req, res) => {
+    const { Pagina, Registros } = req.query;
+    console.log(typeof Pagina);
+    console.log(typeof Registros);
+
+    try {
+        const departamentos = await models.departamentos.findAll({
+            attributes: ['id','cod_departamento', 'nombre'],
+
+            offset: (Number(Pagina)- 1) * Number(Registros),
+            limit: Number(Registros)
+        });
+        res.send(departamentos);
+    } catch (error){
+        res.sendStatus(500).send(`Error al intentar acceder a los datos: ${error}`);
+    }
 }
 
 /* DECLARACION DE LA CONSULTA PARTICULAR POR cod_departamento */
-//TRATAR DE IMPLEMENTAR EL ASYNC
-const getConCodigo = (req, res) => {
-    findDepartamentoCodigo(req.params.cod_departamento, {
-        onSuccess: departamento => res.send(departamento),
-        onNotFound: () => res.sendStatus(404),
-        onError: () => res.sendStatus(500)
-      });
-}
-
+const getConCodigo = async (req, res) => {
+    const cod_buscado = req.params.cod_departamento
+    try {
+        const cod_dep = await models.departamentos.findOne({
+            attributes: ["id", "nombre", "cod_departamento"],
+            where: { cod_departamento: cod_buscado }
+        });
+        if (cod_dep) {
+            res.send(cod_dep)
+        } else {
+            res.status(400).send({ message: `No existe un departamento con cod: ${cod_buscado }` })
+        }
+    } catch (error) {
+        res.sendStatus(500).send(`Error al intentar consultar el registro ${cod_buscado} en la base de datos: ${error}`)
+    }
+  }
 
 
 
@@ -71,7 +76,7 @@ const post = async (req, res) => {
         } else {
             const nuevoDepartamento = await models.departamentos
                 .create({ cod_departamento, nombre })
-            res.status(201).send( `Creacion del Departamento realizado con éxito.`)
+            res.status(200).send( { departamento_ingresado: nuevoDepartamento.nombre + " - COD: " + nuevoDepartamento.cod_departamento  })
         };
     } catch (error) {
         res.status(500).send(`Error al intentar insertar en la base de datos: ${error}`)
@@ -81,46 +86,51 @@ const post = async (req, res) => {
 
 
 /* DECLARACION DE LA BAJA DE UN REGISTRO POR cod_departamento*/
-const deleteConCodigo = (req, res) => {
-    const onSuccess = departamento =>
-    departamento
-      .destroy()
-      .then(() => res.sendStatus(200))
-      .catch(() => res.sendStatus(500));
-  findDepartamentoCodigo(req.params.cod_departamento, {
-    onSuccess,
-    onNotFound: () => res.sendStatus(404),
-    onError: () => res.sendStatus(500)
-    })
-}
+const deleteConCodigo = async (req, res) => {
+    const cod_buscado = req.params.cod_departamento
+    try {
+        const dep_cod = await models.departamentos.findOne({
+          attributes: ["id"],
+          where: {cod_departamento: cod_buscado}
+        });
+  
+        if (!dep_cod) {
+            res.status(400).send({ message: `No existe un departamento con COD: ${cod_buscado}` })
+        } else {
+          let registroEliminado = dep_cod.id;
+          await dep_cod.destroy()
+          res.status(200).send({message: `Se elimino permanentemente el registro con ID: ${registroEliminado}`})
+        }
+    } catch (error) {
+        res.sendStatus(500).send({message: `Error al intentar eliminar el registro ${cod_dep.id} en la base de datos: ${error}` })
+    }
+  }
 
 /* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR cod_departamento*/
 const putConCodigo = async (req, res) => {
-    const { cod_departamento,nombre } = req.body;
+    const { nombre, cod_departamento} = req.body;
+    const cod_buscado = req.params.cod_departamento;
     try {
-        const departamento = await findDepartamentoCodigo(req.params.cod_departamento);
-        if (departamento) {
-            const existe = await models.departamentos.findOne({
-                attributes: ['id','cod_departamento', 'nombre'],
-                where: { nombre }
-            })
-            if (existe) {
-                res.status(400).send('Bad request: Ya existe un departamento con el ese nombre')
-            } else {
-                await models.departamentos
-                    .update({ cod_departamento,nombre }, { where: { cod_departamento: req.params.cod_departamento }, fields: ['cod_departamento','nombre'] })
-                res.sendStatus(200)
-            }
+        const dep_cod = await models.departamentos.findOne({
+          attributes: ["id"],
+          where: {cod_departamento: cod_buscado}
+        });
+  
+        if (!dep_cod) {
+            res.status(400).send({ message: `No existe un departamento con COD: ${cod_buscado}` })
         } else {
-            res.sendStatus(404).send('Bad request: No existe un departamento con el ese codigo de departamento');
+          const departamentoActualizado = await dep_cod.update({ nombre, cod_departamento},
+            { fields: ["nombre", "cod_departamento"] })
+          res.status(200).send( { departamento_actualizado: dep_cod.nombre} )
         }
     } catch (error) {
-        res.status(500).send(`Error al intentar actualizar la base de datos: ${error}`)
+        res.sendStatus(500).send(`Error al intentar insertar en la base de datos: ${error}`)
     }
 }
 
 module.exports = {
     get,
+    getPaginado,
     getConCodigo,
     post,
     putConCodigo,

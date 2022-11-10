@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/car', carrerasRouter);
 //app.use('/mat', materiasRouter);
 app.use('/alu', alumnosRouter);
-// app.use('/pro', profesoresRouter);
+app.use('/pro', profesoresRouter);
 app.use('/dep', departamentosRouter);
 app.use('/ins', inscripcionesRouter);
 
