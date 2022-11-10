@@ -22,6 +22,9 @@ async function getAlumnoPorDNI(dniAlumno) {
 }
 
 
+/* FIN DE FUNCIONES AUXILIARES */
+
+
 /* DECLARACION DE LA CONSULTA GENERAL */
 const get = async (req, res) => {
     try {
