@@ -3,6 +3,23 @@ PARA ELLO SE UTILIZO EL CONCEPTO DE ABM (Alta/Baja/Modificacion) */
 
 const models = require('../models');
 
+/* DECLARACION DE FUNCIONES AUXILIARES */
+// OBTENET EL ID DE Carrera A PARTIR DEL COD_CARRERA
+async function getCarreraPorCod(codCarrera) {
+    try {
+        const carrera = await models.carreras.findOne({
+            attributes: ["id", "cod_carrera", "nombre"],
+            include:[{as: 'Departamento-Relacionado', model:models.departamentos, attributes:["nombre"]}],
+            where: { cod_carrera: codCarrera }
+        });
+  
+        if (carrera) { return carrera }
+
+    } catch (error) {
+        res.sendStatus(500).send(`Error al intentar consultar el registro ${cod_dep} en la base de datos: ${error}`)
+    }
+}
+
 /* DECLARACION DE LA CONSULTA GENERAL */
 const get = async (req, res) => {
 
@@ -43,12 +60,10 @@ const getPaginado = async (req, res) => {
 const getConCodigo = async (req, res) => {
     const cod_buscado = req.params.cod_carrera
     try {
-        const car_cod = await models.carreras.findOne({
-            attributes: ["id", "nombre", "cod_carrera", "id_departamento"],
-            where: { cod_carrera: cod_buscado }
-        });
-        if (car_cod) {
-            res.send(car_cod)
+        const carrera = await getCarreraPorCod(cod_buscado)
+
+        if (carrera) {
+            res.send(carrera)
         } else {
             res.status(400).send({ message: `No existe una carrera con cod: ${cod_buscado }` })
         }
@@ -94,10 +109,7 @@ const post = async (req, res) => {
 const deleteConCodigo = async (req, res) => {
     const cod_buscado = req.params.cod_carrera
     try {
-        const car_cod = await models.carreras.findOne({
-          attributes: ["id"],
-          where: {cod_carrera: cod_buscado}
-        });
+        const car_cod = await getCarreraPorCod(cod_buscado);
   
         if (!car_cod) {
             res.status(400).send({ message: `No existe una carrera con COD: ${cod_buscado}` })
@@ -116,10 +128,7 @@ const putConCodigo = async (req, res) => {
     const { nombre, cod_carrera, id_departamento} = req.body;
     const cod_buscado = req.params.cod_carrera;
     try {
-        const car_cod = await models.carreras.findOne({
-          attributes: ["id"],
-          where: {cod_carrera: cod_buscado}
-        });
+        const car_cod = await getCarreraPorCod(cod_buscado);
   
         if (!car_cod) {
             res.status(400).send({ message: `No existe una carrera con COD: ${cod_buscado}` })
