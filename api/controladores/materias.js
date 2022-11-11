@@ -113,27 +113,44 @@ const post = async (req, res) => {
 /* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR cod_carrera*/
 const putConCodigo = async (req, res) => {
     const { cod_materia,nombre,id_carrera } = req.body;
+    const codMateria = req.params.cod_materia;
     try {
-        const materia = await findMateriaCodigo(req.params.cod_materia);
+        const materia = await getMateriaPorCod(codMateria);
         if (materia) {
-            const existe = await models.materias.findOne({
-                attributes: ['id','cod_materia', 'nombre', 'id_carrera'],
-                where: { nombre }
-            })
-            if (existe) {
-                res.status(400).send('Bad request: Ya existe una materia con ese nombre')
-            } else {
-                await models.materias
-                    .update({ nombre, id_carrera }, { where: { id: req.params.id }, fields: ['cod_materia', 'nombre', 'id_carrera'] })
-                res.sendStatus(200)
-            }
+          const materiaActualizada = await materia.update(
+            {cod_materia: cod_materia, nombre: nombre, id_carrera: id_carrera},
+            {fields: ['cod_materia', 'nombre', 'id_carrera']})
+          res.status(200).send( { message: { materia_actualizada: materia.id} })
         } else {
-            res.sendStatus(404).send('Bad request: No existe una materia con  ese codigo de materia');
+            res.status(400).send( { message: `No existe una materia con codigo: ${codMateria}`})
         }
     } catch (error) {
-        res.status(500).send(`Error al intentar actualizar la base de datos: ${error}`)
+        res.sendStatus(500).send( { message: `Error al intentar insertar en la base de datos: ${error}`})
     }
 }
+
+//     const { cod_materia,nombre,id_carrera } = req.body;
+//     try {
+//         const materia = await getMateriaPorCod(req.params.cod_materia);
+//         if (materia) {
+//             const existe = await models.materias.findOne({
+//                 attributes: ['id','cod_materia', 'nombre', 'id_carrera'],
+//                 where: { nombre }
+//             })
+//             if (existe) {
+//                 res.status(400).send('Bad request: Ya existe una materia con ese nombre')
+//             } else {
+//                 await models.materias
+//                     .update({ nombre, id_carrera }, { where: { id: req.params.id }, fields: ['cod_materia', 'nombre', 'id_carrera'] })
+//                 res.sendStatus(200)
+//             }
+//         } else {
+//             res.sendStatus(404).send('Bad request: No existe una materia con  ese codigo de materia');
+//         }
+//     } catch (error) {
+//         res.status(500).send(`Error al intentar actualizar la base de datos: ${error}`)
+//     }
+// }
 
 
 /* DECLARACION DE LA BAJA DE UN REGISTRO POR cod_carrera*/
