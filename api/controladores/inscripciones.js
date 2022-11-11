@@ -88,10 +88,10 @@ const getPaginado = async (req, res) => {
 
 /* DECLARACION DEL ALTA DE UN REGISTRO*/
 const post = async (req, res) => {
-    const dniAlumno = req.params.dni;
+    const dniAlumno = req.body.dni;
     const alumno = await alumnoControl.getAlumnoPorDNI(dniAlumno);
     
-    const codMateria = req.params.cod_materia;
+    const codMateria = req.body.cod_materia;
     const materia = await materiaControl.getMateriaPorCod(codMateria);
     try {
         const inscripcion = await models.inscripciones.findOne({
