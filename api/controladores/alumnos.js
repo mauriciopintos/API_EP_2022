@@ -9,7 +9,7 @@ const models = require('../models');
 async function getAlumnoPorDNI(dniAlumno) {
     try {
         const alumno = await models.alumnos.findOne({
-            attributes: ["id", "nombre", "dni", "telefono"],
+            attributes: ["id", "nombre", "apellido", "dni", "telefono"],
             include:[{as: 'Carrera-Relacionada', model:models.carreras, attributes: ["id", 'nombre']}],
             where: { dni: dniAlumno }
         });
@@ -29,7 +29,7 @@ async function getAlumnoPorDNI(dniAlumno) {
 const get = async (req, res) => {
     try {
         const alumnos = await models.alumnos.findAll({
-            attributes: ["id", "nombre", "dni"],
+            attributes: ["id", "nombre", "apellido", "dni", "telefono"],
             include:[{as: 'Carrera-Relacionada', model:models.carreras, attributes: ["cod_carrera", 'nombre']}],
         });
         res.send(alumnos);
@@ -44,7 +44,7 @@ const getPaginado = async (req, res) => {
     const { Pagina, Registros } = req.query;
     try {
         const alumnos = await models.alumnos.findAll({
-            attributes: ["id", "nombre", "dni"],
+            attributes: ["id", "nombre", "apellido", "dni", "telefono"],
             include:[{as: 'Carrera-Relacionada', model:models.carreras, attributes: ["cod_carrera", 'nombre']}],
 
             offset: (Number(Pagina)- 1) * Number(Registros),
