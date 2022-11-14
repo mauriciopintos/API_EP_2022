@@ -45,3 +45,14 @@ npm install jsrsasign
 
 Instalar la extension REST Client
 humao.rest-client
+
+CORRER API CON NODEMON
+npm run srv
+
+CORRER API COMO RUTINA CON NODEMON
+ Esto se puede hacer de muchas manera, pero una de ellas desde windows puede ser
+ crear un script cmd para correr la api como servicio o como una tarea programada
+ SCRIPT CMD de muestra =>
+     cd "[Ruta de la carpeta bin]"
+     npx nodemon ./WWW
+
