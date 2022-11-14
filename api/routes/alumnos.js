@@ -8,7 +8,7 @@ const ControladorLogin = require('../controladores/logins');
 const validaToken = ControladorLogin.validaToken
 
 router.get('/:user', validaToken, ControladorAlumnos.get);
-router.get('/', ControladorAlumnos.get);
+// router.get('/', ControladorAlumnos.get);
 router.get('/pag', ControladorAlumnos.getPaginado);
 router.get('/:dni', ControladorAlumnos.getConDNI );
 router.post('/alta', ControladorAlumnos.post);
