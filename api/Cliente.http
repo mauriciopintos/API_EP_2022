@@ -77,6 +77,88 @@ GET http://localhost:3001/alu/nouser
 ###
 GET http://localhost:3001/alu/jperez
 
+
+#------------------------------------
+### CONSULTAR ALUMNOS PAGINADO (get)
+#------------------------------------
+GET http://localhost:3001/alu/nouser/pag?Pagina=1&Registros=5
+
+###
+GET http://localhost:3001/alu/jperez/pag?Pagina=1&Registros=5
+
+
+#------------------------------------
+### CONSULTAR ALUMNO CON DNI (get)
+#------------------------------------
+GET http://localhost:3001/alu/nouser/25478958
+
+###
+GET http://localhost:3001/alu/jperez/25478958
+
+
+#------------------------------------
+### ALTA ALUMNO (post)
+#------------------------------------
+POST http://localhost:3001/alu/nouser/alta
+content-type: application/json
+
+{
+    "nombre": "Lola",
+    "apellido": "Mora",
+    "dni": 98765432,
+    "telefono": 41111111,
+    "id_carrera": 3
+}
+
+###
+POST  http://localhost:3001/alu/jperez/alta
+content-type: application/json
+
+{
+    "nombre": "Lola",
+    "apellido": "Mora",
+    "dni": 98765432,
+    "telefono": 41111111,
+    "id_carrera": 3
+}
+
+
+#------------------------------------
+### BAJA ALUMNO CON DNI (delete)
+#------------------------------------
+DELETE  http://localhost:3001/alu/nouser/baja/98765432
+
+###
+DELETE  http://localhost:3001/alu/jperez/baja/98765432
+
+
+#------------------------------------
+### MODIFICACION ALUMNO CON DNI(put)
+#------------------------------------
+PUT  http://localhost:3001/alu/nouser/modificacion/11111110
+content-type: application/json
+
+{
+    "nombre": "Lola",
+    "apellido": "Mora",
+    "dni": 98765432,
+    "telefono": 41111111,
+    "id_carrera": 3
+}
+
+###
+PUT  http://localhost:3001/alu/jperez/modificacion/11111110
+content-type: application/json
+
+{
+    "nombre": "Lola",
+    "apellido": "Mora",
+    "dni": 98765432,
+    "telefono": 41111111,
+    "id_carrera": 3
+}
+
+
 #=================================================
 ########################
 ### Carreras
@@ -84,7 +166,7 @@ GET http://localhost:3001/alu/jperez
 #------------------------------------
 ### CONSULTAR CARRERAS (get)
 #------------------------------------
-GET http://localhost:3001/car/smariani
+GET http://localhost:3001/car/
 
 
 
