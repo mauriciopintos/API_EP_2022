@@ -76,32 +76,7 @@ const generaToken = async (secret, tiempo) => {
     }
 }
 
-
-// /*****************************************************************************************/
-// /*****************************************************************************************/
-
-// /* FUNCIONES DE PRUEBA, BORRAR AL FINAL */
-// const postCifra = (req, res) => {
-//     cifra(req, res, tiempoPW,secretPW);
-// }
-// const postVerifica = (req, res) => {
-//     verifica(req, res, -secretPW);
-// }
-
-// const verifica = (hash, secret) => {
-//     // const hash = req.body.token;
-//     return jwt.verify(hash, secret, (error, hash) => {
-//         if (error) {
-//             console.log(error.name, error.message);
-//         } else {
-//             console.log(`hash verificado`);
-//         }
-//     });
-// }
-
-
-// /*****************************************************************************************/
-// /*****************************************************************************************/
+/* FIN DE FUNCIONES AUXILIARES */
 
 
 /* DECLARACION DEL LOGIN DE UN USUARIO*/
@@ -198,7 +173,6 @@ const putUser = async (req, res) => {
         res.sendStatus(500);
     }
 }
-
 
 module.exports = {
     validaToken,
