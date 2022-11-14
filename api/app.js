@@ -10,8 +10,9 @@ var alumnosRouter = require('./routes/alumnos');
 var profesoresRouter = require('./routes/profesores');
 var inscripcionesRouter = require('./routes/inscripciones');
 
-
 var app = express();
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,6 +31,19 @@ app.use('/alu', alumnosRouter);
 app.use('/pro', profesoresRouter);
 app.use('/dep', departamentosRouter);
 app.use('/ins', inscripcionesRouter);
+
+
+// Json Web Token
+var jwt = require('jsonwebtoken');
+var keys = require('./settings/keys');
+var loginRouter = require('./routes/logins');
+app.set('key', keys.key);
+app.use('/login', loginRouter);
+// app.use('/token', loginRouter);
+
+
+//app.listen(3001, () => {console.log('Servidor arriba en http://localhost:3001')});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

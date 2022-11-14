@@ -1,0 +1,140 @@
+########################
+##### ABM LOGIN
+########################
+
+#------------------------------------
+### ALTA DE USUARIO (post)
+#------------------------------------
+### USUARIO 1
+POST http://localhost:3001/login/alta
+content-type: application/json
+
+{
+    "usuario": "jperez",
+    "pass": "123456"
+}
+
+#------------------------------------
+### BAJA DE USUARIO (delete)
+#------------------------------------
+### USUARIO 1
+DELETE http://localhost:3001/login/baja
+content-type: application/json
+
+{
+    "usuario": "smariani",
+    "pass": "Pa$$W0rd"
+}
+
+#------------------------------------
+### CAMBIO DE PASS DE USUARIO (put)
+#------------------------------------
+### USUARIO 1
+PUT http://localhost:3001/login/modificacion
+content-type: application/json
+
+{
+    "usuario": "smariani",
+    "pass": "0123456",
+    "newPass": "123456",
+    "confNewPass": "123456"
+}
+
+#------------------------------------
+### LOGIN DE USUARIO (post)
+#------------------------------------
+### USUARIO 1
+POST http://localhost:3001/login
+content-type: application/json
+
+{
+    "usuario": "smariani",
+    "pass": "123456"
+}
+
+### USUARIO 2
+POST http://localhost:3001/login
+content-type: application/json
+
+{
+    "usuario": "jperez",
+    "pass": "123456"
+}
+
+###############################################################
+##### PRUEBAS ENTIDADES
+###############################################################
+
+#=================================================
+########################
+### Alumnos
+########################
+#------------------------------------
+### CONSULTAR ALUMNOS (get)
+#------------------------------------
+GET http://localhost:3001/alu/nouser
+
+###
+GET http://localhost:3001/alu/jperez
+
+#=================================================
+########################
+### Carreras
+########################
+#------------------------------------
+### CONSULTAR CARRERAS (get)
+#------------------------------------
+GET http://localhost:3001/car/smariani
+
+
+
+#=================================================
+########################
+### Departamentos
+########################
+#------------------------------------
+### CONSULTAR DEPARTAMENTOS (get)
+#------------------------------------
+GET http://localhost:3001/dep
+
+
+#=================================================
+########################
+### Materias
+########################
+#------------------------------------
+### CONSULTAR MATERIAS (get)
+#------------------------------------
+GET http://localhost:3001/mat
+
+
+#=================================================
+########################
+### Profesores
+########################
+#------------------------------------
+### CONSULTAR PROFESORES (get)
+#------------------------------------
+GET http://localhost:3001/pro
+
+
+#=================================================
+########################
+### Inscripciones
+########################
+#------------------------------------
+### CONSULTAR INSCRIPCIONES (get)
+#------------------------------------
+GET http://localhost:3001/ins
+
+
+#------------------------------------
+### ALTA INSCRIPCION (post)
+#------------------------------------
+POST http://localhost:3001/ins/alta
+content-type: application/json
+
+{
+    "dni": 47851246,
+    "cod_materia": "ANA001"
+}

@@ -12,6 +12,8 @@
      npx sequelize init
      DEBUG=api:* npm start
 
+     npm install express jsonwebtoken
+
 
 
      npx sequelize-cli model:generate --name carrera --attributes nombre:string
@@ -26,4 +28,18 @@ Entidades principales
 
 Entidades intermedias/relaciones
      npx sequelize-cli model:generate --name inscripciones --attributes DNI_alumno:integer,cod_materia:string
+
+Entidades auxiliares
+     npx sequelize-cli model:generate --name logins --attributes usuario:string,pass:string,token:string
+
+
+Dependencia para correr como servicio
+npm instal nodemon
+
+Dependencia para use JWT
+npm install jsonwebtoken
+
+Libreria de crypto
+npm install bcryptojs
+npm install jsrsasign
 
