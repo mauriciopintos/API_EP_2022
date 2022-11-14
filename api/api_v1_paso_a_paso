@@ -43,3 +43,5 @@ Libreria de crypto
 npm install bcryptojs
 npm install jsrsasign
 
+Instalar la extension REST Client
+humao.rest-client
