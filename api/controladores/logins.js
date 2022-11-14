@@ -83,13 +83,17 @@ const generaToken = async (secret, tiempo) => {
 const post = async (req, res) => {
     const { usuario, pass } = req.body;
     const cuenta = await getUser(usuario);
-    const checkPW = await compara(pass, cuenta.pass);
-    
     try{
-        if(usuario == cuenta.usuario && checkPW) {
-            const hash = await generaToken(secretTK, tiempoTK)
-            await cuenta.update({ token: hash }, { fields: ["token"] });
-            res.send({ message: `Se autentico exitosamente al usuario ${usuario}`})
+        if (cuenta){
+            const checkPW = await compara(pass, cuenta.pass);
+
+            if(usuario == cuenta.usuario && checkPW) {
+                const hash = await generaToken(secretTK, tiempoTK)
+                await cuenta.update({ token: hash }, { fields: ["token"] });
+                res.send({ message: `Se autentico exitosamente al usuario ${usuario}`})
+            } else {
+                res.send({message: 'Usuario y/o password incorrecos'})
+            }
         } else {
             res.send({message: 'Usuario y/o password incorrecos'})
         }
@@ -150,10 +154,8 @@ const putUser = async (req, res) => {
             // validacion para el cambio de password
             const checkCambio = await validaCambioPass(pass, newPass, confNewPass);
 
-            if ( checkCambio ){
-                    console.log('cumple pass') //borrar console.log
+                if ( checkCambio ) {
                     npw = await encripta(newPass);
-                    console.log('npw: ', npw) //borrar console.log
                     await cuenta.update({ pass: npw }, { fields: ["pass"] });
                     res.status(200).send( { message: `Se actualizaron las credenciales del usuario: ${usuario}` });
                  } else {

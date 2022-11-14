@@ -35,7 +35,7 @@ content-type: application/json
 
 {
     "usuario": "smariani",
-    "pass": "0123456",
+    "pass": "12345",
     "newPass": "123456",
     "confNewPass": "123456"
 }
@@ -84,7 +84,7 @@ GET http://localhost:3001/alu/jperez
 GET http://localhost:3001/alu/nouser/pag?Pagina=1&Registros=5
 
 ###
-GET http://localhost:3001/alu/jperez/pag?Pagina=1&Registros=5
+GET http://localhost:3001/alu/jperez/pag?Pagina=2&Registros=2
 
 
 #------------------------------------
@@ -117,7 +117,7 @@ content-type: application/json
 {
     "nombre": "Lola",
     "apellido": "Mora",
-    "dni": 98765432,
+    "dni": 98765430,
     "telefono": 41111111,
     "id_carrera": 3
 }
@@ -141,19 +141,19 @@ content-type: application/json
 {
     "nombre": "Lola",
     "apellido": "Mora",
-    "dni": 98765432,
+    "dni": 98765430,
     "telefono": 41111111,
     "id_carrera": 3
 }
 
 ###
-PUT  http://localhost:3001/alu/jperez/modificacion/11111110
+PUT  http://localhost:3001/alu/jperez/modificacion/98765430
 content-type: application/json
 
 {
     "nombre": "Lola",
     "apellido": "Mora",
-    "dni": 98765432,
+    "dni": 98765439,
     "telefono": 41111111,
     "id_carrera": 3
 }

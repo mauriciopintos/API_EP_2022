@@ -8,7 +8,7 @@ const validaToken = ControladorLogin.validaToken
 
 router.post('/', ControladorLogin.post);
 router.post('/alta', ControladorLogin.postUser);
-router.delete('/baja', validaToken, ControladorLogin.deleteUser);
-router.put('/modificacion', validaToken, ControladorLogin.putUser);
+router.delete('/baja', ControladorLogin.deleteUser);
+router.put('/modificacion', ControladorLogin.putUser);
 
 module.exports = router;
