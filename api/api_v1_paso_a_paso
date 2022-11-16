@@ -40,7 +40,7 @@ Dependencia para use JWT
 npm install jsonwebtoken
 
 Libreria de crypto
-npm install bcryptojs
+npm install bcrypt
 npm install jsrsasign
 
 Instalar la extension REST Client
