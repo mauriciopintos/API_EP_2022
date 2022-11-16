@@ -6,7 +6,8 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        onDelete: 'cascade'
       },
       cod_carrera: {
         unique: true,
@@ -20,7 +21,8 @@ module.exports = {
         references: {
           model: 'departamentos',
           key: 'id'
-        }
+        },
+        onDelete: 'cascade'
       },
       createdAt: {
         allowNull: false,

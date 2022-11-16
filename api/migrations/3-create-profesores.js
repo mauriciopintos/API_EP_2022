@@ -6,7 +6,8 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        onDelete: 'cascade'
         
       },
       nombre: {
@@ -20,7 +21,8 @@ module.exports = {
         references: {
           model: 'materias',
           key: 'id'
-        }
+        },
+        onDelete: 'cascade'
       },
       dni: {
         type: Sequelize.INTEGER

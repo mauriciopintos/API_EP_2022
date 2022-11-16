@@ -8,12 +8,14 @@ module.exports = (sequelize, DataTypes) => {
   materias.associate = function(models) {
     materias.belongsTo(models.carreras, { // modelo al que pertenece
       as : 'Materia-Carrera',  // nombre de mi relacion
-      foreignKey: 'id_carrera'     // campo con el que voy a igualar
+      foreignKey: 'id_carrera',     // campo con el que voy a igualar
+      onDelete: 'cascade'
     }); // associations can be defined here
 
     materias.hasMany(models.inscripciones, {
       as: "Materia-Inscripta",
-      primaryKey: "id"
+      primaryKey: "id",
+      onDelete: 'cascade'
     });
     
   };

@@ -6,7 +6,8 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        onDelete: 'cascade'
       },
       dni: {
         allowNull: false,
@@ -27,7 +28,8 @@ module.exports = {
         references: {
           model: 'carreras',
           key: 'id'
-        }
+        },
+        onDelete: 'cascade'
       },
       createdAt: {
         allowNull: false,

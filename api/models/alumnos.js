@@ -12,12 +12,14 @@ module.exports = (sequelize, DataTypes) => {
 
     alumnos.belongsTo(models.carreras, { // modelo al que pertenece
       as : 'Carrera-Relacionada',  // nombre de mi relacion
-      foreignKey: 'id_carrera'     // campo con el que voy a igualar
+      foreignKey: 'id_carrera',     // campo con el que voy a igualar
+      onDelete: 'cascade'
     });
 
     alumnos.hasMany(models.inscripciones, {
       as: "Alumno-Inscripto",
-      primaryKey: "id"
+      primaryKey: "id",
+      onDelete: 'cascade'
     });
     
   };

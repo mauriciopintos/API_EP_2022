@@ -8,12 +8,14 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     inscripciones.belongsTo(models.alumnos, {
       as: 'Alumno-Inscripto',
-      foreignKey: 'id_alumno'
+      foreignKey: 'id_alumno',
+      onDelete: 'cascade'
     });
     
     inscripciones.belongsTo(models.materias, {
       as: 'Materia-Inscripta',
-      foreignKey: 'id_materia'
+      foreignKey: 'id_materia',
+      onDelete: 'cascade'
     });
 
   };
