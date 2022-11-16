@@ -40,7 +40,7 @@ Dependencia para use JWT
 npm install jsonwebtoken
 
 Libreria de crypto
-npm install bcrypt
+npm install bcrypto
 npm install jsrsasign
 
 Instalar la extension REST Client
@@ -55,4 +55,5 @@ CORRER API COMO RUTINA CON NODEMON
  SCRIPT CMD de muestra =>
      cd "[Ruta de la carpeta bin]"
      npx nodemon ./WWW
+     
 
