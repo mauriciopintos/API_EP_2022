@@ -38,8 +38,6 @@ const get = async (req, res) => {
     
 }
 
-
-
 /* DECLARACION DE LA CONSULTA PARTICULAR POR codigo */
 
 const getConCodigo = async (req, res) => {
@@ -79,7 +77,6 @@ const getPaginado = async (req, res) => {
     }
 }
 
-
 /* DECLARACION DEL ALTA DE UN REGISTRO*/
 const post = async (req, res) => {
     const { cod_materia, nombre, id_carrera } = req.body;
@@ -108,9 +105,7 @@ const post = async (req, res) => {
     }
 }
 
-
-
-/* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR cod_carrera*/
+/* DECLARACION DE LA MODIFICACION DE UN REGISTRO POR cod_materia*/
 const putConCodigo = async (req, res) => {
     const { cod_materia,nombre,id_carrera } = req.body;
     const codMateria = req.params.cod_materia;
@@ -129,31 +124,7 @@ const putConCodigo = async (req, res) => {
     }
 }
 
-//     const { cod_materia,nombre,id_carrera } = req.body;
-//     try {
-//         const materia = await getMateriaPorCod(req.params.cod_materia);
-//         if (materia) {
-//             const existe = await models.materias.findOne({
-//                 attributes: ['id','cod_materia', 'nombre', 'id_carrera'],
-//                 where: { nombre }
-//             })
-//             if (existe) {
-//                 res.status(400).send('Bad request: Ya existe una materia con ese nombre')
-//             } else {
-//                 await models.materias
-//                     .update({ nombre, id_carrera }, { where: { id: req.params.id }, fields: ['cod_materia', 'nombre', 'id_carrera'] })
-//                 res.sendStatus(200)
-//             }
-//         } else {
-//             res.sendStatus(404).send('Bad request: No existe una materia con  ese codigo de materia');
-//         }
-//     } catch (error) {
-//         res.status(500).send(`Error al intentar actualizar la base de datos: ${error}`)
-//     }
-// }
-
-
-/* DECLARACION DE LA BAJA DE UN REGISTRO POR cod_carrera*/
+/* DECLARACION DE LA BAJA DE UN REGISTRO POR cod_materia*/
 const deleteConCodigo = async (req, res) => {
     const cod_buscado = req.params.cod_materia
     try {
