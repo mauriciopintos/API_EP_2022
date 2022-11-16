@@ -1,0 +1,40 @@
+###############################################################
+##### PRUEBAS ENTIDADES
+###############################################################
+
+#=================================================
+########################
+### Inscripciones
+########################
+#------------------------------------
+### CONSULTAR INSCRIPCIONES (get)
+#------------------------------------
+GET http://localhost:3001/ins
+
+
+#------------------------------------
+### ALTA INSCRIPCION (post)
+#------------------------------------
+POST http://localhost:3001/ins/alta
+content-type: application/json
+
+{
+    "dni": 47851246,
+    "cod_materia": "ANA001"
+}
+
+#------------------------------------
+### BAJA INSCRIPCION (delete)
+#------------------------------------
+DELETE http://localhost:3001/ins/baja/47851246/ANA001
+
+#------------------------------------
+### MODIFICACON INSCRIPCION (put)
+#------------------------------------
+PUT http://localhost:3001/ins/modificacion/47851246/ANA001
+content-type: application/json
+
+{
+    "dni": 47851246,
+    "cod_materia": "MAT001"
+}

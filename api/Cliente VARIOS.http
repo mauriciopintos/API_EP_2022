@@ -1,0 +1,128 @@
+########################
+##### LOGIN
+########################
+### USUARIO 1
+POST http://localhost:3001/login
+content-type: application/json
+
+{
+    "usuario": "smariani",
+    "pass": "123456"
+}
+
+### USUARIO 2
+POST http://localhost:3001/login
+content-type: application/json
+
+{
+    "usuario": "jperez",
+    "pass": "123456"
+}
+
+###############################################################
+##### PRUEBAS ENTIDADES
+###############################################################
+
+#=================================================
+########################
+### Carreras
+########################
+#------------------------------------
+### CONSULTAR CARRERAS (get)
+#------------------------------------
+GET http://localhost:3001/car/nouser
+
+###
+GET http://localhost:3001/car/jperez
+
+
+
+#=================================================
+########################
+### Departamentos
+########################
+#------------------------------------
+### CONSULTAR DEPARTAMENTOS (get)
+#------------------------------------
+GET http://localhost:3001/dep/nouser
+
+###
+GET http://localhost:3001/dep/jperez
+
+#------------------------------------
+### CONSULTAR DEPARTAMENTOS PAGINADO (get)
+#------------------------------------
+GET http://localhost:3001/dep/nouser/pag?Pagina=1&Registros=5
+
+###
+GET http://localhost:3001/dep/jperez/pag?Pagina=2&Registros=2
+
+#------------------------------------
+### ALTA DEPARTAMENTO (post)
+#------------------------------------
+POST http://localhost:3001/dep/nouser/alta
+content-type: application/json
+
+{
+    "nombre": "Ingenieria",
+    "cod_departamento": "ING123"
+}
+
+###
+POST  http://localhost:3001/dep/jperez/alta
+content-type: application/json
+
+{
+    "nombre": "Ingenieria",
+    "cod_departamento": "ING123"
+}
+
+#------------------------------------
+### BAJA DEPARTAMENTO CON COD_DEPARTAMENTO (delete)
+#------------------------------------
+DELETE  http://localhost:3001/dep/nouser/baja/ING123
+
+###
+DELETE  http://localhost:3001/dep/jperez/baja/ING123
+
+#------------------------------------
+### MODIFICACION DEPARTAMENTO CON COD_DEPARTAMENTO(put)
+#------------------------------------
+PUT  http://localhost:3001/dep/nouser/modificacion/ING123
+content-type: application/json
+
+{
+    "nombre": "Ingenieria",
+    "cod_departamento": "ING123"
+}
+
+###
+PUT  http://localhost:3001/dep/jperez/modificacion/ING123
+content-type: application/json
+
+{
+    "nombre": "IngenieriaS",
+    "cod_departamento": "ING123S"
+}
+
+#=================================================
+########################
+### Materias
+########################
+#------------------------------------
+### CONSULTAR MATERIAS (get)
+#------------------------------------
+GET http://localhost:3001/mat
+
+
+#=================================================
+########################
+### Profesores
+########################
+#------------------------------------
+### CONSULTAR PROFESORES (get)
+#------------------------------------
+GET http://localhost:3001/pro
+
+
+#=================================================

@@ -1,0 +1,62 @@
+########################
+##### ABM LOGIN
+########################
+
+#------------------------------------
+### ALTA DE USUARIO (post)
+#------------------------------------
+### USUARIO 1
+POST http://localhost:3001/login/alta
+content-type: application/json
+
+{
+    "usuario": "jperez",
+    "pass": "123456"
+}
+
+#------------------------------------
+### BAJA DE USUARIO (delete)
+#------------------------------------
+### USUARIO 1
+DELETE http://localhost:3001/login/baja
+content-type: application/json
+
+{
+    "usuario": "smariani",
+    "pass": "Pa$$W0rd"
+}
+
+#------------------------------------
+### CAMBIO DE PASS DE USUARIO (put)
+#------------------------------------
+### USUARIO 1
+PUT http://localhost:3001/login/modificacion
+content-type: application/json
+
+{
+    "usuario": "smariani",
+    "pass": "12345",
+    "newPass": "123456",
+    "confNewPass": "123456"
+}
+
+#------------------------------------
+### LOGIN DE USUARIO (post)
+#------------------------------------
+### USUARIO 1
+POST http://localhost:3001/login
+content-type: application/json
+
+{
+    "usuario": "smariani",
+    "pass": "123456"
+}
+
+### USUARIO 2
+POST http://localhost:3001/login
+content-type: application/json
+
+{
+    "usuario": "jperez",
+    "pass": "123456"
+}
